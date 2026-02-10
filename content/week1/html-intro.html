@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 1: What is HTML? | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #09090b;
+      --bg-secondary: #0f0f11;
+      --bg-card: #1c1c1f;
+      --bg-code: #0d1117;
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --accent: #3b82f6;
+      --accent-green: #22c55e;
+      --accent-purple: #a855f7;
+      --accent-orange: #f59e0b;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+    .lesson-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+    .breadcrumb {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .lesson-header {
+      margin-bottom: 48px;
+    }
+    .lesson-week {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(59, 130, 246, 0.15);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .lesson-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .lesson-meta {
+      display: flex;
+      gap: 24px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .lesson-meta span { display: flex; align-items: center; gap: 6px; }
+
+    .objectives-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 48px;
+    }
+    .objectives-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .objectives-list {
+      list-style: none;
+    }
+    .objectives-list li {
+      padding: 8px 0;
+      padding-left: 28px;
+      position: relative;
+      color: var(--text-secondary);
+    }
+    .objectives-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--accent-green);
+      font-weight: bold;
+    }
+
+    .lesson-content h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      margin: 48px 0 20px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .lesson-content h2:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+    .lesson-content h3 {
+      font-size: 1.25rem;
+      margin: 32px 0 16px;
+      color: var(--text-primary);
+    }
+    .lesson-content p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .lesson-content strong {
+      color: var(--text-primary);
+    }
+
+    /* Code blocks */
+    .code-block {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 24px 0;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .code-filename {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .code-copy {
+      padding: 6px 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+    .code-copy:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+    pre {
+      padding: 20px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    code {
+      font-family: var(--font-mono);
+    }
+    .inline-code {
+      background: rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: var(--accent-purple);
+    }
+
+    /* Syntax highlighting */
+    .tag { color: #ff7b72; }
+    .attr { color: #79c0ff; }
+    .string { color: #a5d6ff; }
+    .comment { color: #8b949e; }
+
+    /* Callout boxes */
+    .callout {
+      padding: 20px 24px;
+      border-radius: 12px;
+      margin: 24px 0;
+      border-left: 4px solid;
+    }
+    .callout-info {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: var(--accent);
+    }
+    .callout-tip {
+      background: rgba(34, 197, 94, 0.1);
+      border-color: var(--accent-green);
+    }
+    .callout-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: var(--accent-orange);
+    }
+    .callout-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .callout p { margin: 0; color: var(--text-secondary); }
+
+    /* Try it yourself */
+    .try-it {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1));
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 32px 0;
+    }
+    .try-it-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .try-it ol {
+      margin-left: 20px;
+      color: var(--text-secondary);
+    }
+    .try-it li { margin: 8px 0; }
+
+    /* Navigation */
+    .lesson-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      background: var(--bg-secondary);
+      border-color: var(--accent);
+    }
+    .nav-btn-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .nav-btn-title { font-weight: 500; }
+    .nav-btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .nav-btn.primary:hover {
+      background: #2563eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="breadcrumb">
+      <a href="/pages/dashboard.html">Dashboard</a> &rsaquo;
+      <a href="/pages/calendar.html">Calendar</a> &rsaquo;
+      Week 1 &rsaquo; Lesson 1
+    </div>
+
+    <header class="lesson-header">
+      <div class="lesson-week">Week 1 &bull; HTML & CSS Fundamentals</div>
+      <h1 class="lesson-title">What is HTML? Document Structure</h1>
+      <div class="lesson-meta">
+        <span>45 min</span>
+        <span>Lesson 1 of 28</span>
+      </div>
+    </header>
+
+    <div class="objectives-box">
+      <div class="objectives-title">What you'll learn</div>
+      <ul class="objectives-list">
+        <li>Understand what HTML is and why it matters</li>
+        <li>Create your first HTML file</li>
+        <li>Learn the basic document structure (DOCTYPE, html, head, body)</li>
+      </ul>
+    </div>
+
+    <div class="lesson-content">
+      <h2>What is HTML?</h2>
+
+      <p><strong>HTML</strong> stands for <strong>HyperText Markup Language</strong>. It's the standard language for creating web pages. Every website you've ever visited is built with HTML at its core.</p>
+
+      <p>Think of HTML as the <strong>skeleton</strong> of a webpage. Just like your skeleton gives your body structure, HTML gives structure to web content. It tells the browser: "This is a heading," "This is a paragraph," "This is an image."</p>
+
+      <div class="callout callout-info">
+        <div class="callout-title">Key Insight</div>
+        <p>HTML doesn't make things look pretty &mdash; that's CSS's job. HTML defines <em>what</em> content is (a heading, a list, a link). CSS defines <em>how</em> it looks (colors, fonts, spacing).</p>
+      </div>
+
+      <h2>Your First HTML File</h2>
+
+      <p>Let's create your very first HTML file. You'll be amazed how simple it is to get started!</p>
+
+      <h3>Step 1: Create a file</h3>
+      <p>Create a new file called <span class="inline-code">index.html</span> on your computer. You can use any text editor &mdash; VS Code, Sublime Text, or even Notepad.</p>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">Pro Tip</div>
+        <p>We recommend <strong>VS Code</strong> (Visual Studio Code). It's free, powerful, and has excellent HTML support. Download it at <a href="https://code.visualstudio.com" style="color: var(--accent);">code.visualstudio.com</a></p>
+      </div>
+
+      <h3>Step 2: Write your first HTML</h3>
+      <p>Type this code into your file:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">index.html</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="comment">&lt;!-- This is your first HTML file! --&gt;</span>
+<span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="string">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span>My First Webpage<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+  <span class="tag">&lt;h1&gt;</span>Hello, World!<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>I just wrote my first HTML!<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+      </div>
+
+      <h3>Step 3: Open in your browser</h3>
+      <p>Save the file, then double-click it to open in your web browser. You should see your heading and paragraph displayed!</p>
+
+      <h2>Understanding the Structure</h2>
+
+      <p>Let's break down each part of this HTML document:</p>
+
+      <h3><span class="inline-code">&lt;!DOCTYPE html&gt;</span></h3>
+      <p>This declaration tells the browser "Hey, this is an HTML5 document!" It must be the very first line.</p>
+
+      <h3><span class="inline-code">&lt;html&gt;</span></h3>
+      <p>The root element that contains ALL other HTML elements. The <span class="inline-code">lang="en"</span> attribute tells browsers and search engines this page is in English.</p>
+
+      <h3><span class="inline-code">&lt;head&gt;</span></h3>
+      <p>The "brain" of your document. Contains metadata &mdash; information ABOUT your page that doesn't appear on the page itself:</p>
+      <ul style="margin-left: 20px; color: var(--text-secondary); margin-bottom: 20px;">
+        <li><span class="inline-code">&lt;meta charset="UTF-8"&gt;</span> &mdash; Character encoding (supports all languages)</li>
+        <li><span class="inline-code">&lt;title&gt;</span> &mdash; Shows in the browser tab</li>
+        <li>CSS stylesheets and JavaScript files also go here</li>
+      </ul>
+
+      <h3><span class="inline-code">&lt;body&gt;</span></h3>
+      <p>Everything visible on your webpage goes inside the body. This is where all your content lives &mdash; text, images, buttons, everything!</p>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">Common Mistake</div>
+        <p>Every opening tag needs a closing tag! <span class="inline-code">&lt;h1&gt;</span> needs <span class="inline-code">&lt;/h1&gt;</span>. Forgetting the slash (<span class="inline-code">/</span>) is one of the most common beginner errors.</p>
+      </div>
+
+      <h2>Tags, Elements & Attributes</h2>
+
+      <p>Three key terms you'll use constantly:</p>
+
+      <h3>Tags</h3>
+      <p>Tags are the building blocks of HTML. They're wrapped in angle brackets: <span class="inline-code">&lt;tagname&gt;</span></p>
+      <p>Most tags come in pairs: an <strong>opening tag</strong> and a <strong>closing tag</strong> (with a slash).</p>
+
+      <h3>Elements</h3>
+      <p>An element is the complete package: opening tag + content + closing tag.</p>
+      <div class="code-block">
+        <pre><span class="tag">&lt;p&gt;</span>This entire thing is a paragraph element<span class="tag">&lt;/p&gt;</span></pre>
+      </div>
+
+      <h3>Attributes</h3>
+      <p>Attributes provide extra information about elements. They go inside the opening tag:</p>
+      <div class="code-block">
+        <pre><span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="string">"https://google.com"</span><span class="tag">&gt;</span>Click me!<span class="tag">&lt;/a&gt;</span>
+
+<span class="comment">&lt;!-- href is an attribute that tells the link where to go --&gt;</span></pre>
+      </div>
+
+      <div class="try-it">
+        <div class="try-it-title">Try It Yourself!</div>
+        <ol>
+          <li>Create a new file called <span class="inline-code">about.html</span></li>
+          <li>Copy the basic HTML structure from above</li>
+          <li>Change the <span class="inline-code">&lt;title&gt;</span> to "About Me"</li>
+          <li>In the body, add:
+            <ul>
+              <li>An <span class="inline-code">&lt;h1&gt;</span> with your name</li>
+              <li>A <span class="inline-code">&lt;p&gt;</span> describing yourself</li>
+              <li>Another <span class="inline-code">&lt;p&gt;</span> about why you want to learn web development</li>
+            </ul>
+          </li>
+          <li>Open it in your browser and admire your work!</li>
+        </ol>
+      </div>
+
+      <h2>Key Takeaways</h2>
+
+      <ul style="margin-left: 20px; color: var(--text-secondary);">
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">HTML is structure</strong> &mdash; it defines what content IS, not how it looks</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Every HTML page needs</strong>: DOCTYPE, html, head, and body</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Tags come in pairs</strong> &mdash; opening <span class="inline-code">&lt;tag&gt;</span> and closing <span class="inline-code">&lt;/tag&gt;</span></li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Attributes</strong> add extra info to elements</li>
+      </ul>
+
+      <p style="margin-top: 32px;">Congratulations! You've written your first HTML. Tomorrow, we'll learn about more HTML elements like headings, lists, and text formatting. See you then!</p>
+    </div>
+
+    <nav class="lesson-nav">
+      <a href="/pages/dashboard.html" class="nav-btn">
+        <span>&larr;</span>
+        <div>
+          <div class="nav-btn-label">Back to</div>
+          <div class="nav-btn-title">Dashboard</div>
+        </div>
+      </a>
+      <a href="html-elements.html" class="nav-btn primary">
+        <div>
+          <div class="nav-btn-label">Next Lesson</div>
+          <div class="nav-btn-title">HTML Elements</div>
+        </div>
+        <span>&rarr;</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      const text = pre.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>
