@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 10: Responsive Design & CSS Variables | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #09090b; --bg-secondary: #0f0f11; --bg-card: #1c1c1f; --bg-code: #0d1117;
+      --text-primary: #fafafa; --text-secondary: #a1a1aa; --text-muted: #71717a;
+      --accent: #3b82f6; --accent-green: #22c55e; --accent-purple: #a855f7; --accent-orange: #f59e0b;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+    .lesson-container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .lesson-header { margin-bottom: 48px; }
+    .lesson-week { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(168, 85, 247, 0.15); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--accent-purple); margin-bottom: 16px; }
+    .lesson-title { font-family: var(--font-display); font-size: 2.5rem; line-height: 1.2; margin-bottom: 16px; }
+    .lesson-meta { display: flex; gap: 24px; color: var(--text-secondary); font-size: 0.9rem; }
+    .objectives-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+    .objectives-title { font-weight: 600; margin-bottom: 12px; }
+    .objectives-list { list-style: none; }
+    .objectives-list li { padding: 8px 0; padding-left: 28px; position: relative; color: var(--text-secondary); }
+    .objectives-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-green); font-weight: bold; }
+    .lesson-content h2 { font-family: var(--font-display); font-size: 1.75rem; margin: 48px 0 20px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .lesson-content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .lesson-content h3 { font-size: 1.25rem; margin: 32px 0 16px; }
+    .lesson-content p { color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content strong { color: var(--text-primary); }
+    .lesson-content ul { margin-left: 20px; color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content li { margin: 8px 0; }
+    .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 24px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+    .code-filename { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+    pre { padding: 20px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; }
+    .inline-code { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.9em; color: var(--accent-purple); font-family: var(--font-mono); }
+    .selector { color: #ff7b72; } .property { color: #79c0ff; } .value { color: #a5d6ff; } .comment { color: #8b949e; }
+    .callout { padding: 20px 24px; border-radius: 12px; margin: 24px 0; border-left: 4px solid; }
+    .callout-info { background: rgba(59, 130, 246, 0.1); border-color: var(--accent); }
+    .callout-tip { background: rgba(34, 197, 94, 0.1); border-color: var(--accent-green); }
+    .callout-title { font-weight: 600; margin-bottom: 8px; }
+    .callout p { margin: 0; color: var(--text-secondary); }
+    .try-it { background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 24px; margin: 32px 0; }
+    .try-it-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 12px; }
+    .try-it ol { margin-left: 20px; color: var(--text-secondary); }
+    .try-it li { margin: 8px 0; }
+    .breakpoint-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+    .breakpoint-table th, .breakpoint-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    .breakpoint-table th { color: var(--text-primary); font-weight: 600; }
+    .breakpoint-table td { color: var(--text-secondary); }
+    .lesson-nav { display: flex; justify-content: space-between; margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .nav-btn { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--bg-secondary); border-color: var(--accent); }
+    .nav-btn-label { font-size: 0.8rem; color: var(--text-muted); }
+    .nav-btn-title { font-weight: 500; }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="breadcrumb">
+      <a href="/pages/dashboard.html">Dashboard</a> &rsaquo; Week 2 &rsaquo; Lesson 10
+    </div>
+
+    <header class="lesson-header">
+      <div class="lesson-week">Week 2 &bull; Advanced CSS & JavaScript</div>
+      <h1 class="lesson-title">Responsive Design & CSS Variables</h1>
+      <div class="lesson-meta">
+        <span>45 min</span>
+        <span>Lesson 10 of 28</span>
+      </div>
+    </header>
+
+    <div class="objectives-box">
+      <div class="objectives-title">What you'll learn</div>
+      <ul class="objectives-list">
+        <li>Use media queries for different screen sizes</li>
+        <li>Implement mobile-first design approach</li>
+        <li>Create and use CSS custom properties (variables)</li>
+      </ul>
+    </div>
+
+    <div class="lesson-content">
+      <h2>Why Responsive Design?</h2>
+
+      <p>Over 50% of web traffic comes from mobile devices. Your website MUST work on all screen sizes — phones, tablets, laptops, and desktops.</p>
+
+      <p><strong>Responsive design</strong> means your layout adapts to the user's screen. You achieve this with:</p>
+      <ul>
+        <li>Fluid layouts (percentages, fr units, flexbox, grid)</li>
+        <li>Flexible images</li>
+        <li>Media queries for specific breakpoints</li>
+      </ul>
+
+      <h2>The Viewport Meta Tag</h2>
+
+      <p>This tag is <strong>essential</strong> for mobile responsiveness. Without it, mobile browsers render at desktop width and zoom out.</p>
+
+      <div class="code-block">
+        <pre><span class="comment">&lt;!-- ALWAYS include this in your &lt;head&gt; --&gt;</span>
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</pre>
+      </div>
+
+      <h2>Media Queries</h2>
+
+      <p>Media queries let you apply CSS rules only at certain screen widths:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">responsive.css</span>
+        </div>
+        <pre><span class="comment">/* Base styles (mobile-first) */</span>
+<span class="selector">.container</span> {
+  <span class="property">padding</span>: <span class="value">16px</span>;
+}
+
+<span class="comment">/* Tablet and up */</span>
+<span class="selector">@media (min-width: 768px)</span> {
+  <span class="selector">.container</span> {
+    <span class="property">padding</span>: <span class="value">24px</span>;
+  }
+}
+
+<span class="comment">/* Desktop and up */</span>
+<span class="selector">@media (min-width: 1024px)</span> {
+  <span class="selector">.container</span> {
+    <span class="property">padding</span>: <span class="value">32px</span>;
+    <span class="property">max-width</span>: <span class="value">1200px</span>;
+    <span class="property">margin</span>: <span class="value">0 auto</span>;
+  }
+}</pre>
+      </div>
+
+      <h3>Common Breakpoints</h3>
+
+      <table class="breakpoint-table">
+        <tr>
+          <th>Breakpoint</th>
+          <th>Target</th>
+          <th>Media Query</th>
+        </tr>
+        <tr>
+          <td>Small</td>
+          <td>Phones</td>
+          <td><code>@media (min-width: 640px)</code></td>
+        </tr>
+        <tr>
+          <td>Medium</td>
+          <td>Tablets</td>
+          <td><code>@media (min-width: 768px)</code></td>
+        </tr>
+        <tr>
+          <td>Large</td>
+          <td>Laptops</td>
+          <td><code>@media (min-width: 1024px)</code></td>
+        </tr>
+        <tr>
+          <td>XL</td>
+          <td>Desktops</td>
+          <td><code>@media (min-width: 1280px)</code></td>
+        </tr>
+      </table>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">Mobile-First Approach</div>
+        <p>Write your base CSS for mobile, then use <span class="inline-code">min-width</span> media queries to add styles for larger screens. This ensures your mobile experience is solid and larger screens get enhancements.</p>
+      </div>
+
+      <h2>Responsive Navigation Pattern</h2>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">nav-responsive.css</span>
+        </div>
+        <pre><span class="comment">/* Mobile: Stack nav links vertically, hide by default */</span>
+<span class="selector">.nav-links</span> {
+  <span class="property">display</span>: <span class="value">none</span>;
+  <span class="property">flex-direction</span>: <span class="value">column</span>;
+  <span class="property">width</span>: <span class="value">100%</span>;
+}
+
+<span class="selector">.nav-links.active</span> {
+  <span class="property">display</span>: <span class="value">flex</span>;
+}
+
+<span class="selector">.hamburger</span> {
+  <span class="property">display</span>: <span class="value">block</span>;  <span class="comment">/* Show hamburger on mobile */</span>
+}
+
+<span class="comment">/* Desktop: Show links in a row, hide hamburger */</span>
+<span class="selector">@media (min-width: 768px)</span> {
+  <span class="selector">.nav-links</span> {
+    <span class="property">display</span>: <span class="value">flex</span>;
+    <span class="property">flex-direction</span>: <span class="value">row</span>;
+    <span class="property">width</span>: <span class="value">auto</span>;
+    <span class="property">gap</span>: <span class="value">24px</span>;
+  }
+
+  <span class="selector">.hamburger</span> {
+    <span class="property">display</span>: <span class="value">none</span>;
+  }
+}</pre>
+      </div>
+
+      <h2>CSS Custom Properties (Variables)</h2>
+
+      <p>CSS variables let you define reusable values. They're incredibly powerful for theming and consistency.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">variables.css</span>
+        </div>
+        <pre><span class="comment">/* Define variables in :root (global scope) */</span>
+<span class="selector">:root</span> {
+  <span class="property">--color-primary</span>: <span class="value">#3b82f6</span>;
+  <span class="property">--color-secondary</span>: <span class="value">#a855f7</span>;
+  <span class="property">--color-text</span>: <span class="value">#fafafa</span>;
+  <span class="property">--color-text-muted</span>: <span class="value">#a1a1aa</span>;
+  <span class="property">--color-bg</span>: <span class="value">#09090b</span>;
+
+  <span class="property">--spacing-sm</span>: <span class="value">8px</span>;
+  <span class="property">--spacing-md</span>: <span class="value">16px</span>;
+  <span class="property">--spacing-lg</span>: <span class="value">24px</span>;
+
+  <span class="property">--radius</span>: <span class="value">8px</span>;
+  <span class="property">--font-body</span>: <span class="value">'Inter', sans-serif</span>;
+}
+
+<span class="comment">/* Use variables with var() */</span>
+<span class="selector">.button</span> {
+  <span class="property">background</span>: <span class="value">var(--color-primary)</span>;
+  <span class="property">padding</span>: <span class="value">var(--spacing-sm) var(--spacing-md)</span>;
+  <span class="property">border-radius</span>: <span class="value">var(--radius)</span>;
+  <span class="property">font-family</span>: <span class="value">var(--font-body)</span>;
+}
+
+<span class="selector">.card</span> {
+  <span class="property">background</span>: <span class="value">var(--color-bg)</span>;
+  <span class="property">padding</span>: <span class="value">var(--spacing-lg)</span>;
+  <span class="property">border-radius</span>: <span class="value">var(--radius)</span>;
+}</pre>
+      </div>
+
+      <h3>Why Use CSS Variables?</h3>
+      <ul>
+        <li><strong>Consistency:</strong> Change a color in one place, updates everywhere</li>
+        <li><strong>Theming:</strong> Easy dark/light mode switching</li>
+        <li><strong>Readability:</strong> <span class="inline-code">var(--color-primary)</span> is clearer than <span class="inline-code">#3b82f6</span></li>
+        <li><strong>JavaScript access:</strong> You can read/write CSS variables from JS</li>
+      </ul>
+
+      <h3>Dark Mode Example</h3>
+
+      <div class="code-block">
+        <pre><span class="selector">:root</span> {
+  <span class="property">--bg</span>: <span class="value">#ffffff</span>;
+  <span class="property">--text</span>: <span class="value">#1a1a1a</span>;
+}
+
+<span class="selector">@media (prefers-color-scheme: dark)</span> {
+  <span class="selector">:root</span> {
+    <span class="property">--bg</span>: <span class="value">#09090b</span>;
+    <span class="property">--text</span>: <span class="value">#fafafa</span>;
+  }
+}
+
+<span class="selector">body</span> {
+  <span class="property">background</span>: <span class="value">var(--bg)</span>;
+  <span class="property">color</span>: <span class="value">var(--text)</span>;
+}</pre>
+      </div>
+
+      <div class="try-it">
+        <div class="try-it-title">Today's Project: Make Your Landing Page Mobile-Responsive</div>
+        <ol>
+          <li>Add CSS variables for all your colors, spacing, and fonts at the top of your stylesheet</li>
+          <li>Replace all hardcoded values with <span class="inline-code">var(--name)</span></li>
+          <li>Add a mobile navigation with hamburger menu (hidden on desktop)</li>
+          <li>Stack your feature cards vertically on mobile, grid on desktop</li>
+          <li>Adjust font sizes and padding for mobile</li>
+          <li>Test by resizing your browser window</li>
+        </ol>
+      </div>
+
+      <h2>Key Takeaways</h2>
+      <ul style="margin-left: 20px; color: var(--text-secondary);">
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Mobile-first:</strong> Base styles for mobile, media queries for larger screens</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">min-width queries:</strong> Apply styles at this width and above</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">CSS variables:</strong> Define in :root, use with var()</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Always include</strong> the viewport meta tag!</li>
+      </ul>
+    </div>
+
+    <nav class="lesson-nav">
+      <a href="css-grid.html" class="nav-btn">
+        <span>&larr;</span>
+        <div>
+          <div class="nav-btn-label">Previous</div>
+          <div class="nav-btn-title">CSS Grid</div>
+        </div>
+      </a>
+      <a href="js-intro.html" class="nav-btn primary">
+        <div>
+          <div class="nav-btn-label">Next Lesson</div>
+          <div class="nav-btn-title">Intro to JavaScript</div>
+        </div>
+        <span>&rarr;</span>
+      </a>
+    </nav>
+  </div>
+</body>
+</html>

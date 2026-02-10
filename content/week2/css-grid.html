@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 9: CSS Grid Layout | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #09090b; --bg-secondary: #0f0f11; --bg-card: #1c1c1f; --bg-code: #0d1117;
+      --text-primary: #fafafa; --text-secondary: #a1a1aa; --text-muted: #71717a;
+      --accent: #3b82f6; --accent-green: #22c55e; --accent-purple: #a855f7; --accent-orange: #f59e0b;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+    .lesson-container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .lesson-header { margin-bottom: 48px; }
+    .lesson-week { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(168, 85, 247, 0.15); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--accent-purple); margin-bottom: 16px; }
+    .lesson-title { font-family: var(--font-display); font-size: 2.5rem; line-height: 1.2; margin-bottom: 16px; }
+    .lesson-meta { display: flex; gap: 24px; color: var(--text-secondary); font-size: 0.9rem; }
+    .objectives-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+    .objectives-title { font-weight: 600; margin-bottom: 12px; }
+    .objectives-list { list-style: none; }
+    .objectives-list li { padding: 8px 0; padding-left: 28px; position: relative; color: var(--text-secondary); }
+    .objectives-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-green); font-weight: bold; }
+    .lesson-content h2 { font-family: var(--font-display); font-size: 1.75rem; margin: 48px 0 20px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .lesson-content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .lesson-content h3 { font-size: 1.25rem; margin: 32px 0 16px; }
+    .lesson-content p { color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content strong { color: var(--text-primary); }
+    .lesson-content ul, .lesson-content ol { margin-left: 20px; color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content li { margin: 8px 0; }
+    .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 24px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+    .code-filename { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+    pre { padding: 20px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; }
+    .inline-code { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.9em; color: var(--accent-purple); font-family: var(--font-mono); }
+    .selector { color: #ff7b72; } .property { color: #79c0ff; } .value { color: #a5d6ff; } .comment { color: #8b949e; }
+    .callout { padding: 20px 24px; border-radius: 12px; margin: 24px 0; border-left: 4px solid; }
+    .callout-info { background: rgba(59, 130, 246, 0.1); border-color: var(--accent); }
+    .callout-tip { background: rgba(34, 197, 94, 0.1); border-color: var(--accent-green); }
+    .callout-title { font-weight: 600; margin-bottom: 8px; }
+    .callout p { margin: 0; color: var(--text-secondary); }
+    .try-it { background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 24px; margin: 32px 0; }
+    .try-it-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 12px; }
+    .try-it ol, .try-it ul { margin-left: 20px; color: var(--text-secondary); }
+    .try-it li { margin: 8px 0; }
+    .demo-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 24px 0; }
+    .demo-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+    .grid-demo { display: grid; gap: 12px; padding: 16px; background: var(--bg-secondary); border-radius: 8px; }
+    .grid-item { padding: 20px; background: var(--accent); color: white; border-radius: 6px; font-weight: 500; font-size: 0.9rem; text-align: center; }
+    .lesson-nav { display: flex; justify-content: space-between; margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .nav-btn { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--bg-secondary); border-color: var(--accent); }
+    .nav-btn-label { font-size: 0.8rem; color: var(--text-muted); }
+    .nav-btn-title { font-weight: 500; }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="breadcrumb">
+      <a href="/pages/dashboard.html">Dashboard</a> &rsaquo; Week 2 &rsaquo; Lesson 9
+    </div>
+
+    <header class="lesson-header">
+      <div class="lesson-week">Week 2 &bull; Advanced CSS & JavaScript</div>
+      <h1 class="lesson-title">CSS Grid Layout</h1>
+      <div class="lesson-meta">
+        <span>45 min</span>
+        <span>Lesson 9 of 28</span>
+      </div>
+    </header>
+
+    <div class="objectives-box">
+      <div class="objectives-title">What you'll learn</div>
+      <ul class="objectives-list">
+        <li>Create grid containers with rows and columns</li>
+        <li>Use fr units and repeat() for flexible layouts</li>
+        <li>Place items in specific grid areas</li>
+      </ul>
+    </div>
+
+    <div class="lesson-content">
+      <h2>Flexbox vs Grid</h2>
+
+      <p><strong>Flexbox</strong> is great for one-dimensional layouts (rows OR columns). <strong>Grid</strong> is designed for two-dimensional layouts (rows AND columns simultaneously).</p>
+
+      <p>Use Grid when you need:</p>
+      <ul>
+        <li>Complex page layouts (header, sidebar, main, footer)</li>
+        <li>Card grids that align both horizontally and vertically</li>
+        <li>Any layout where you think in terms of rows AND columns</li>
+      </ul>
+
+      <h2>Creating a Grid</h2>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">grid-basics.css</span>
+        </div>
+        <pre><span class="selector">.container</span> {
+  <span class="property">display</span>: <span class="value">grid</span>;
+  <span class="property">grid-template-columns</span>: <span class="value">200px 200px 200px</span>;  <span class="comment">/* 3 columns, each 200px */</span>
+  <span class="property">grid-template-rows</span>: <span class="value">100px 100px</span>;         <span class="comment">/* 2 rows, each 100px */</span>
+  <span class="property">gap</span>: <span class="value">16px</span>;                                 <span class="comment">/* Space between cells */</span>
+}</pre>
+      </div>
+
+      <div class="demo-container">
+        <div class="demo-label">3 columns × 2 rows grid</div>
+        <div class="grid-demo" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: 80px 80px;">
+          <div class="grid-item">1</div>
+          <div class="grid-item">2</div>
+          <div class="grid-item">3</div>
+          <div class="grid-item">4</div>
+          <div class="grid-item">5</div>
+          <div class="grid-item">6</div>
+        </div>
+      </div>
+
+      <h2>The fr Unit (Fractional)</h2>
+
+      <p>The <span class="inline-code">fr</span> unit represents a fraction of available space. It's like flex-grow for Grid!</p>
+
+      <div class="code-block">
+        <pre><span class="selector">.container</span> {
+  <span class="property">display</span>: <span class="value">grid</span>;
+  <span class="property">grid-template-columns</span>: <span class="value">1fr 1fr 1fr</span>;    <span class="comment">/* 3 equal columns */</span>
+  <span class="property">grid-template-columns</span>: <span class="value">1fr 2fr 1fr</span>;    <span class="comment">/* Middle is twice as wide */</span>
+  <span class="property">grid-template-columns</span>: <span class="value">250px 1fr</span>;      <span class="comment">/* Fixed sidebar + flexible main */</span>
+}</pre>
+      </div>
+
+      <h2>repeat() Function</h2>
+
+      <p>Instead of typing the same value multiple times, use <span class="inline-code">repeat()</span>:</p>
+
+      <div class="code-block">
+        <pre><span class="comment">/* These are equivalent */</span>
+<span class="property">grid-template-columns</span>: <span class="value">1fr 1fr 1fr 1fr</span>;
+<span class="property">grid-template-columns</span>: <span class="value">repeat(4, 1fr)</span>;
+
+<span class="comment">/* Responsive grid: as many columns as fit, minimum 250px each */</span>
+<span class="property">grid-template-columns</span>: <span class="value">repeat(auto-fit, minmax(250px, 1fr))</span>;</pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">The Magic Line</div>
+        <p><span class="inline-code">grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))</span> creates a responsive grid that automatically adjusts columns based on screen width. No media queries needed!</p>
+      </div>
+
+      <div class="demo-container">
+        <div class="demo-label">repeat(auto-fit, minmax(150px, 1fr)) - resize your browser!</div>
+        <div class="grid-demo" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+          <div class="grid-item">Card 1</div>
+          <div class="grid-item">Card 2</div>
+          <div class="grid-item">Card 3</div>
+          <div class="grid-item">Card 4</div>
+        </div>
+      </div>
+
+      <h2>Placing Items</h2>
+
+      <p>Grid items can span multiple rows or columns:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">grid-placement.css</span>
+        </div>
+        <pre><span class="selector">.item</span> {
+  <span class="property">grid-column</span>: <span class="value">1 / 3</span>;      <span class="comment">/* Start at line 1, end at line 3 (span 2 columns) */</span>
+  <span class="property">grid-column</span>: <span class="value">span 2</span>;     <span class="comment">/* Span 2 columns from wherever it lands */</span>
+  <span class="property">grid-row</span>: <span class="value">1 / 4</span>;         <span class="comment">/* Span 3 rows */</span>
+}
+
+<span class="comment">/* Shorthand: grid-area: row-start / col-start / row-end / col-end */</span>
+<span class="selector">.header</span> {
+  <span class="property">grid-area</span>: <span class="value">1 / 1 / 2 / 4</span>;  <span class="comment">/* First row, span all 3 columns */</span>
+}</pre>
+      </div>
+
+      <h2>Named Grid Areas</h2>
+
+      <p>For complex layouts, name your areas for clarity:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">dashboard-layout.css</span>
+        </div>
+        <pre><span class="selector">.dashboard</span> {
+  <span class="property">display</span>: <span class="value">grid</span>;
+  <span class="property">grid-template-columns</span>: <span class="value">250px 1fr</span>;
+  <span class="property">grid-template-rows</span>: <span class="value">64px 1fr</span>;
+  <span class="property">grid-template-areas</span>:
+    <span class="value">"header header"</span>
+    <span class="value">"sidebar main"</span>;
+  <span class="property">min-height</span>: <span class="value">100vh</span>;
+}
+
+<span class="selector">.header</span>  { <span class="property">grid-area</span>: <span class="value">header</span>; }
+<span class="selector">.sidebar</span> { <span class="property">grid-area</span>: <span class="value">sidebar</span>; }
+<span class="selector">.main</span>    { <span class="property">grid-area</span>: <span class="value">main</span>; }</pre>
+      </div>
+
+      <div class="demo-container">
+        <div class="demo-label">Dashboard Layout with Named Areas</div>
+        <div style="display: grid; grid-template-columns: 120px 1fr; grid-template-rows: 50px 150px; grid-template-areas: 'header header' 'sidebar main'; gap: 8px;">
+          <div style="grid-area: header; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500;">Header</div>
+          <div style="grid-area: sidebar; background: var(--accent-purple); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500;">Sidebar</div>
+          <div style="grid-area: main; background: var(--accent-green); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500;">Main Content</div>
+        </div>
+      </div>
+
+      <h2>Common Grid Patterns</h2>
+
+      <h3>Card Grid</h3>
+      <div class="code-block">
+        <pre><span class="selector">.card-grid</span> {
+  <span class="property">display</span>: <span class="value">grid</span>;
+  <span class="property">grid-template-columns</span>: <span class="value">repeat(auto-fill, minmax(300px, 1fr))</span>;
+  <span class="property">gap</span>: <span class="value">24px</span>;
+}</pre>
+      </div>
+
+      <h3>Holy Grail Layout</h3>
+      <div class="code-block">
+        <pre><span class="selector">.page</span> {
+  <span class="property">display</span>: <span class="value">grid</span>;
+  <span class="property">grid-template</span>:
+    <span class="value">"header header header" 80px</span>
+    <span class="value">"nav    main   aside"  1fr</span>
+    <span class="value">"footer footer footer" 60px</span>
+    <span class="value">/ 200px 1fr    200px</span>;
+  <span class="property">min-height</span>: <span class="value">100vh</span>;
+}</pre>
+      </div>
+
+      <div class="try-it">
+        <div class="try-it-title">Today's Project: Dashboard Layout with Grid</div>
+        <ol>
+          <li>Create a dashboard layout with:
+            <ul>
+              <li>Fixed header at the top (full width)</li>
+              <li>Fixed-width sidebar on the left (250px)</li>
+              <li>Flexible main content area</li>
+            </ul>
+          </li>
+          <li>Use <span class="inline-code">grid-template-areas</span> to define the layout</li>
+          <li>In the main area, create a card grid using <span class="inline-code">repeat(auto-fit, minmax(280px, 1fr))</span></li>
+          <li>Add 4-6 cards to demonstrate the responsive behavior</li>
+          <li>Make the layout fill the viewport height with <span class="inline-code">min-height: 100vh</span></li>
+        </ol>
+      </div>
+
+      <h2>Key Takeaways</h2>
+      <ul style="margin-left: 20px; color: var(--text-secondary);">
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Grid is for 2D layouts</strong> — rows AND columns together</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">fr units</strong> divide available space proportionally</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">repeat(auto-fit, minmax())</strong> creates responsive grids automatically</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Named areas</strong> make complex layouts readable</li>
+      </ul>
+    </div>
+
+    <nav class="lesson-nav">
+      <a href="css-flexbox.html" class="nav-btn">
+        <span>&larr;</span>
+        <div>
+          <div class="nav-btn-label">Previous</div>
+          <div class="nav-btn-title">Flexbox Layout</div>
+        </div>
+      </a>
+      <a href="css-responsive.html" class="nav-btn primary">
+        <div>
+          <div class="nav-btn-label">Next Lesson</div>
+          <div class="nav-btn-title">Responsive Design</div>
+        </div>
+        <span>&rarr;</span>
+      </a>
+    </nav>
+  </div>
+</body>
+</html>

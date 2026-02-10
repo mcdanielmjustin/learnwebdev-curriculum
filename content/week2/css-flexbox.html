@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 8: Flexbox Layout | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #09090b; --bg-secondary: #0f0f11; --bg-card: #1c1c1f; --bg-code: #0d1117;
+      --text-primary: #fafafa; --text-secondary: #a1a1aa; --text-muted: #71717a;
+      --accent: #3b82f6; --accent-green: #22c55e; --accent-purple: #a855f7; --accent-orange: #f59e0b;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+    .lesson-container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .lesson-header { margin-bottom: 48px; }
+    .lesson-week { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(168, 85, 247, 0.15); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--accent-purple); margin-bottom: 16px; }
+    .lesson-title { font-family: var(--font-display); font-size: 2.5rem; line-height: 1.2; margin-bottom: 16px; }
+    .lesson-meta { display: flex; gap: 24px; color: var(--text-secondary); font-size: 0.9rem; }
+    .objectives-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+    .objectives-title { font-weight: 600; margin-bottom: 12px; }
+    .objectives-list { list-style: none; }
+    .objectives-list li { padding: 8px 0; padding-left: 28px; position: relative; color: var(--text-secondary); }
+    .objectives-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-green); font-weight: bold; }
+    .lesson-content h2 { font-family: var(--font-display); font-size: 1.75rem; margin: 48px 0 20px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .lesson-content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .lesson-content h3 { font-size: 1.25rem; margin: 32px 0 16px; }
+    .lesson-content p { color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content strong { color: var(--text-primary); }
+    .lesson-content ul, .lesson-content ol { margin-left: 20px; color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content li { margin: 8px 0; }
+    .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 24px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+    .code-filename { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+    .code-copy { padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; }
+    pre { padding: 20px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; }
+    .inline-code { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.9em; color: var(--accent-purple); font-family: var(--font-mono); }
+    .selector { color: #ff7b72; } .property { color: #79c0ff; } .value { color: #a5d6ff; } .comment { color: #8b949e; }
+    .callout { padding: 20px 24px; border-radius: 12px; margin: 24px 0; border-left: 4px solid; }
+    .callout-info { background: rgba(59, 130, 246, 0.1); border-color: var(--accent); }
+    .callout-tip { background: rgba(34, 197, 94, 0.1); border-color: var(--accent-green); }
+    .callout-title { font-weight: 600; margin-bottom: 8px; }
+    .callout p { margin: 0; color: var(--text-secondary); }
+    .try-it { background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 24px; margin: 32px 0; }
+    .try-it-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 12px; }
+    .try-it ol, .try-it ul { margin-left: 20px; color: var(--text-secondary); }
+    .try-it li { margin: 8px 0; }
+    .demo-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 24px 0; }
+    .demo-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+    .flex-demo { display: flex; gap: 12px; padding: 16px; background: var(--bg-secondary); border-radius: 8px; min-height: 100px; }
+    .flex-item { padding: 16px 24px; background: var(--accent); color: white; border-radius: 6px; font-weight: 500; font-size: 0.9rem; }
+    .lesson-nav { display: flex; justify-content: space-between; margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .nav-btn { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--bg-secondary); border-color: var(--accent); }
+    .nav-btn-label { font-size: 0.8rem; color: var(--text-muted); }
+    .nav-btn-title { font-weight: 500; }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="breadcrumb">
+      <a href="/pages/dashboard.html">Dashboard</a> &rsaquo; Week 2 &rsaquo; Lesson 8
+    </div>
+
+    <header class="lesson-header">
+      <div class="lesson-week">Week 2 &bull; Advanced CSS & JavaScript</div>
+      <h1 class="lesson-title">Flexbox Layout</h1>
+      <div class="lesson-meta">
+        <span>45 min</span>
+        <span>Lesson 8 of 28</span>
+      </div>
+    </header>
+
+    <div class="objectives-box">
+      <div class="objectives-title">What you'll learn</div>
+      <ul class="objectives-list">
+        <li>Understand flex containers and flex items</li>
+        <li>Use justify-content and align-items for alignment</li>
+        <li>Build responsive navigation with Flexbox</li>
+      </ul>
+    </div>
+
+    <div class="lesson-content">
+      <h2>Why Flexbox?</h2>
+
+      <p>Before Flexbox, centering things in CSS was notoriously difficult. Floats were hacky, and vertical centering was a nightmare. <strong>Flexbox</strong> solves all of this with a powerful, intuitive layout system.</p>
+
+      <p>Flexbox is designed for <strong>one-dimensional layouts</strong> — either a row or a column. It excels at:</p>
+      <ul>
+        <li>Distributing space between items</li>
+        <li>Aligning items horizontally and vertically</li>
+        <li>Creating responsive layouts without media queries</li>
+        <li>Reordering elements visually</li>
+      </ul>
+
+      <h2>The Basics: Container & Items</h2>
+
+      <p>Flexbox has two key concepts:</p>
+      <ul>
+        <li><strong>Flex Container:</strong> The parent element with <span class="inline-code">display: flex</span></li>
+        <li><strong>Flex Items:</strong> The direct children of a flex container</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">flexbox-basics.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="comment">/* The parent becomes a flex container */</span>
+<span class="selector">.container</span> {
+  <span class="property">display</span>: <span class="value">flex</span>;
+}
+
+<span class="comment">/* Children automatically become flex items */</span>
+<span class="selector">.item</span> {
+  <span class="comment">/* No special CSS needed - they're flex items now! */</span>
+}</pre>
+      </div>
+
+      <div class="demo-container">
+        <div class="demo-label">display: flex (items flow in a row)</div>
+        <div class="flex-demo">
+          <div class="flex-item">Item 1</div>
+          <div class="flex-item">Item 2</div>
+          <div class="flex-item">Item 3</div>
+        </div>
+      </div>
+
+      <h2>Main Axis vs Cross Axis</h2>
+
+      <p>Flexbox works on two axes:</p>
+      <ul>
+        <li><strong>Main Axis:</strong> The primary direction (horizontal by default)</li>
+        <li><strong>Cross Axis:</strong> Perpendicular to the main axis (vertical by default)</li>
+      </ul>
+
+      <div class="code-block">
+        <pre><span class="comment">/* Change direction with flex-direction */</span>
+<span class="selector">.row</span> { <span class="property">flex-direction</span>: <span class="value">row</span>; }         <span class="comment">/* default: left to right */</span>
+<span class="selector">.row-reverse</span> { <span class="property">flex-direction</span>: <span class="value">row-reverse</span>; }  <span class="comment">/* right to left */</span>
+<span class="selector">.column</span> { <span class="property">flex-direction</span>: <span class="value">column</span>; }      <span class="comment">/* top to bottom */</span>
+<span class="selector">.column-reverse</span> { <span class="property">flex-direction</span>: <span class="value">column-reverse</span>; } <span class="comment">/* bottom to top */</span></pre>
+      </div>
+
+      <h2>justify-content: Main Axis Alignment</h2>
+
+      <p>This controls how items are distributed along the <strong>main axis</strong>.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">justify-content.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="selector">.container</span> {
+  <span class="property">display</span>: <span class="value">flex</span>;
+  <span class="property">justify-content</span>: <span class="value">flex-start</span>;     <span class="comment">/* default: pack items at start */</span>
+  <span class="property">justify-content</span>: <span class="value">flex-end</span>;       <span class="comment">/* pack at end */</span>
+  <span class="property">justify-content</span>: <span class="value">center</span>;         <span class="comment">/* center items */</span>
+  <span class="property">justify-content</span>: <span class="value">space-between</span>;  <span class="comment">/* equal space between items */</span>
+  <span class="property">justify-content</span>: <span class="value">space-around</span>;   <span class="comment">/* equal space around items */</span>
+  <span class="property">justify-content</span>: <span class="value">space-evenly</span>;   <span class="comment">/* truly equal spacing */</span>
+}</pre>
+      </div>
+
+      <div class="demo-container">
+        <div class="demo-label">justify-content: space-between</div>
+        <div class="flex-demo" style="justify-content: space-between;">
+          <div class="flex-item">Logo</div>
+          <div class="flex-item">Nav</div>
+        </div>
+      </div>
+
+      <div class="demo-container">
+        <div class="demo-label">justify-content: center</div>
+        <div class="flex-demo" style="justify-content: center;">
+          <div class="flex-item">Centered</div>
+        </div>
+      </div>
+
+      <h2>align-items: Cross Axis Alignment</h2>
+
+      <p>This controls alignment along the <strong>cross axis</strong> (vertical for row layouts).</p>
+
+      <div class="code-block">
+        <pre><span class="selector">.container</span> {
+  <span class="property">display</span>: <span class="value">flex</span>;
+  <span class="property">align-items</span>: <span class="value">stretch</span>;     <span class="comment">/* default: stretch to fill container */</span>
+  <span class="property">align-items</span>: <span class="value">flex-start</span>;  <span class="comment">/* align to top */</span>
+  <span class="property">align-items</span>: <span class="value">flex-end</span>;    <span class="comment">/* align to bottom */</span>
+  <span class="property">align-items</span>: <span class="value">center</span>;      <span class="comment">/* center vertically */</span>
+}</pre>
+      </div>
+
+      <div class="demo-container">
+        <div class="demo-label">align-items: center (perfect vertical centering!)</div>
+        <div class="flex-demo" style="justify-content: center; align-items: center; height: 150px;">
+          <div class="flex-item">Perfectly Centered!</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">The Holy Grail of Centering</div>
+        <p>To center something both horizontally and vertically: <span class="inline-code">display: flex; justify-content: center; align-items: center;</span>. Three lines. That's it!</p>
+      </div>
+
+      <h2>gap: Spacing Between Items</h2>
+
+      <p>The <span class="inline-code">gap</span> property adds space between flex items (not around the edges).</p>
+
+      <div class="code-block">
+        <pre><span class="selector">.container</span> {
+  <span class="property">display</span>: <span class="value">flex</span>;
+  <span class="property">gap</span>: <span class="value">16px</span>;         <span class="comment">/* Equal gap between all items */</span>
+  <span class="property">gap</span>: <span class="value">16px 32px</span>;    <span class="comment">/* row-gap | column-gap */</span>
+}</pre>
+      </div>
+
+      <h2>Real Example: Navigation Bar</h2>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">nav.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="selector">.nav</span> {
+  <span class="property">display</span>: <span class="value">flex</span>;
+  <span class="property">justify-content</span>: <span class="value">space-between</span>;  <span class="comment">/* Logo left, links right */</span>
+  <span class="property">align-items</span>: <span class="value">center</span>;             <span class="comment">/* Vertically center */</span>
+  <span class="property">padding</span>: <span class="value">16px 32px</span>;
+  <span class="property">background</span>: <span class="value">#09090b</span>;
+}
+
+<span class="selector">.nav-links</span> {
+  <span class="property">display</span>: <span class="value">flex</span>;
+  <span class="property">gap</span>: <span class="value">24px</span>;                       <span class="comment">/* Space between links */</span>
+}
+
+<span class="selector">.nav-links a</span> {
+  <span class="property">color</span>: <span class="value">#a1a1aa</span>;
+  <span class="property">text-decoration</span>: <span class="value">none</span>;
+}
+
+<span class="selector">.nav-links a:hover</span> {
+  <span class="property">color</span>: <span class="value">#fafafa</span>;
+}</pre>
+      </div>
+
+      <div class="demo-container">
+        <div class="demo-label">Navigation with Flexbox</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: var(--bg-secondary); border-radius: 8px;">
+          <div style="font-weight: 600; font-size: 1.1rem;">CodeCraft</div>
+          <div style="display: flex; gap: 24px;">
+            <span style="color: var(--text-secondary);">Home</span>
+            <span style="color: var(--text-secondary);">Learn</span>
+            <span style="color: var(--text-secondary);">Practice</span>
+            <span style="color: var(--accent);">Login</span>
+          </div>
+        </div>
+      </div>
+
+      <h2>flex-wrap: Handling Overflow</h2>
+
+      <p>By default, flex items try to fit on one line. Use <span class="inline-code">flex-wrap</span> to allow wrapping.</p>
+
+      <div class="code-block">
+        <pre><span class="selector">.container</span> {
+  <span class="property">display</span>: <span class="value">flex</span>;
+  <span class="property">flex-wrap</span>: <span class="value">nowrap</span>;   <span class="comment">/* default: squeeze onto one line */</span>
+  <span class="property">flex-wrap</span>: <span class="value">wrap</span>;     <span class="comment">/* allow items to wrap to next line */</span>
+}</pre>
+      </div>
+
+      <div class="try-it">
+        <div class="try-it-title">Today's Project: Recreate the PassEPPP Navigation</div>
+        <ol>
+          <li>Create a <span class="inline-code">&lt;nav&gt;</span> with <span class="inline-code">display: flex</span></li>
+          <li>Add a logo/brand on the left</li>
+          <li>Add navigation links in a nested flex container on the right</li>
+          <li>Use <span class="inline-code">justify-content: space-between</span> to push them apart</li>
+          <li>Use <span class="inline-code">align-items: center</span> for vertical alignment</li>
+          <li>Add <span class="inline-code">gap</span> between the nav links</li>
+          <li>Style the links with colors and hover effects</li>
+          <li>Make the nav <span class="inline-code">position: fixed</span> at the top</li>
+        </ol>
+      </div>
+
+      <h2>Key Takeaways</h2>
+      <ul style="margin-left: 20px; color: var(--text-secondary);">
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">display: flex</strong> on the parent creates a flex container</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">justify-content</strong> aligns on the main axis (usually horizontal)</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">align-items</strong> aligns on the cross axis (usually vertical)</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">gap</strong> adds space between items</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Centering is easy:</strong> justify-content: center; align-items: center;</li>
+      </ul>
+    </div>
+
+    <nav class="lesson-nav">
+      <a href="/content/week1/week1-quiz.html" class="nav-btn">
+        <span>&larr;</span>
+        <div>
+          <div class="nav-btn-label">Previous</div>
+          <div class="nav-btn-title">Week 1 Quiz</div>
+        </div>
+      </a>
+      <a href="css-grid.html" class="nav-btn primary">
+        <div>
+          <div class="nav-btn-label">Next Lesson</div>
+          <div class="nav-btn-title">CSS Grid Layout</div>
+        </div>
+        <span>&rarr;</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>
