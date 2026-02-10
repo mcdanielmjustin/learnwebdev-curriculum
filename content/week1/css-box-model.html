@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5: The CSS Box Model | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #09090b; --bg-secondary: #0f0f11; --bg-card: #1c1c1f; --bg-code: #0d1117;
+      --text-primary: #fafafa; --text-secondary: #a1a1aa; --text-muted: #71717a;
+      --accent: #3b82f6; --accent-green: #22c55e; --accent-purple: #a855f7; --accent-orange: #f59e0b;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+    .lesson-container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .lesson-header { margin-bottom: 48px; }
+    .lesson-week { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(59, 130, 246, 0.15); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+    .lesson-title { font-family: var(--font-display); font-size: 2.5rem; line-height: 1.2; margin-bottom: 16px; }
+    .lesson-meta { display: flex; gap: 24px; color: var(--text-secondary); font-size: 0.9rem; }
+    .objectives-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+    .objectives-title { font-weight: 600; margin-bottom: 12px; }
+    .objectives-list { list-style: none; }
+    .objectives-list li { padding: 8px 0; padding-left: 28px; position: relative; color: var(--text-secondary); }
+    .objectives-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-green); font-weight: bold; }
+    .lesson-content h2 { font-family: var(--font-display); font-size: 1.75rem; margin: 48px 0 20px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .lesson-content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .lesson-content h3 { font-size: 1.25rem; margin: 32px 0 16px; }
+    .lesson-content p { color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content strong { color: var(--text-primary); }
+    .lesson-content ul, .lesson-content ol { margin-left: 20px; color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content li { margin: 8px 0; }
+    .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 24px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+    .code-filename { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+    .code-copy { padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; }
+    pre { padding: 20px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; }
+    .inline-code { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.9em; color: var(--accent-purple); font-family: var(--font-mono); }
+    .selector { color: #ff7b72; } .property { color: #79c0ff; } .value { color: #a5d6ff; } .comment { color: #8b949e; }
+    .callout { padding: 20px 24px; border-radius: 12px; margin: 24px 0; border-left: 4px solid; }
+    .callout-info { background: rgba(59, 130, 246, 0.1); border-color: var(--accent); }
+    .callout-tip { background: rgba(34, 197, 94, 0.1); border-color: var(--accent-green); }
+    .callout-warning { background: rgba(245, 158, 11, 0.1); border-color: var(--accent-orange); }
+    .callout-title { font-weight: 600; margin-bottom: 8px; }
+    .callout p { margin: 0; color: var(--text-secondary); }
+    .try-it { background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 24px; margin: 32px 0; }
+    .try-it-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 12px; }
+    .try-it ol, .try-it ul { margin-left: 20px; color: var(--text-secondary); }
+    .try-it li { margin: 8px 0; }
+
+    /* Box Model Demo */
+    .box-demo { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 40px; margin: 32px 0; display: flex; justify-content: center; }
+    .box-model-visual { position: relative; }
+    .box-margin { background: rgba(245, 158, 11, 0.3); padding: 30px; border: 2px dashed var(--accent-orange); border-radius: 8px; }
+    .box-border { background: rgba(59, 130, 246, 0.3); padding: 20px; border: 4px solid var(--accent); border-radius: 4px; }
+    .box-padding { background: rgba(34, 197, 94, 0.3); padding: 20px; border-radius: 2px; }
+    .box-content { background: rgba(168, 85, 247, 0.5); padding: 20px; text-align: center; font-weight: 600; border-radius: 2px; }
+    .box-label { position: absolute; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .label-margin { top: 5px; left: 50%; transform: translateX(-50%); color: var(--accent-orange); }
+    .label-border { top: 38px; left: 50%; transform: translateX(-50%); color: var(--accent); }
+    .label-padding { top: 68px; left: 50%; transform: translateX(-50%); color: var(--accent-green); }
+
+    .lesson-nav { display: flex; justify-content: space-between; margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .nav-btn { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--bg-secondary); border-color: var(--accent); }
+    .nav-btn-label { font-size: 0.8rem; color: var(--text-muted); }
+    .nav-btn-title { font-weight: 500; }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="breadcrumb">
+      <a href="/pages/dashboard.html">Dashboard</a> &rsaquo; Week 1 &rsaquo; Lesson 5
+    </div>
+
+    <header class="lesson-header">
+      <div class="lesson-week">Week 1 &bull; HTML & CSS Fundamentals</div>
+      <h1 class="lesson-title">The CSS Box Model</h1>
+      <div class="lesson-meta">
+        <span>45 min</span>
+        <span>Lesson 5 of 28</span>
+      </div>
+    </header>
+
+    <div class="objectives-box">
+      <div class="objectives-title">What you'll learn</div>
+      <ul class="objectives-list">
+        <li>Understand the box model: content, padding, border, margin</li>
+        <li>Control element sizing with width and height</li>
+        <li>Use box-sizing: border-box for predictable layouts</li>
+      </ul>
+    </div>
+
+    <div class="lesson-content">
+      <h2>Everything is a Box</h2>
+
+      <p>In CSS, every element is a rectangular box. Even circles and images — they all occupy rectangular space. Understanding the <strong>box model</strong> is fundamental to CSS layout.</p>
+
+      <p>Every box has four layers, from inside to out:</p>
+
+      <div class="box-demo">
+        <div class="box-model-visual">
+          <span class="box-label label-margin">Margin</span>
+          <div class="box-margin">
+            <span class="box-label label-border">Border</span>
+            <div class="box-border">
+              <span class="box-label label-padding">Padding</span>
+              <div class="box-padding">
+                <div class="box-content">Content</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ul>
+        <li><strong style="color: var(--accent-purple);">Content</strong> — The actual text, image, or child elements</li>
+        <li><strong style="color: var(--accent-green);">Padding</strong> — Space between content and border (inside the box)</li>
+        <li><strong style="color: var(--accent);">Border</strong> — The visible edge of the box</li>
+        <li><strong style="color: var(--accent-orange);">Margin</strong> — Space outside the border (between this box and others)</li>
+      </ul>
+
+      <h2>Padding</h2>
+
+      <p>Padding creates space <strong>inside</strong> the element, between the content and the border. It takes on the element's background color.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">padding.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="comment">/* All four sides */</span>
+<span class="selector">.box</span> {
+  <span class="property">padding</span>: <span class="value">20px</span>;
+}
+
+<span class="comment">/* Vertical | Horizontal */</span>
+<span class="selector">.box</span> {
+  <span class="property">padding</span>: <span class="value">10px 20px</span>;  <span class="comment">/* 10px top/bottom, 20px left/right */</span>
+}
+
+<span class="comment">/* Top | Horizontal | Bottom */</span>
+<span class="selector">.box</span> {
+  <span class="property">padding</span>: <span class="value">10px 20px 30px</span>;
+}
+
+<span class="comment">/* Top | Right | Bottom | Left (clockwise) */</span>
+<span class="selector">.box</span> {
+  <span class="property">padding</span>: <span class="value">10px 20px 30px 40px</span>;
+}
+
+<span class="comment">/* Individual sides */</span>
+<span class="selector">.box</span> {
+  <span class="property">padding-top</span>: <span class="value">10px</span>;
+  <span class="property">padding-right</span>: <span class="value">20px</span>;
+  <span class="property">padding-bottom</span>: <span class="value">10px</span>;
+  <span class="property">padding-left</span>: <span class="value">20px</span>;
+}</pre>
+      </div>
+
+      <h2>Margin</h2>
+
+      <p>Margin creates space <strong>outside</strong> the element. It's transparent and pushes other elements away.</p>
+
+      <div class="code-block">
+        <pre><span class="comment">/* Same shorthand patterns as padding */</span>
+<span class="selector">.box</span> {
+  <span class="property">margin</span>: <span class="value">20px</span>;           <span class="comment">/* All sides */</span>
+  <span class="property">margin</span>: <span class="value">20px 40px</span>;      <span class="comment">/* Vertical | Horizontal */</span>
+  <span class="property">margin</span>: <span class="value">10px 20px 30px 40px</span>;  <span class="comment">/* Clockwise */</span>
+}
+
+<span class="comment">/* Center a block element horizontally */</span>
+<span class="selector">.centered</span> {
+  <span class="property">width</span>: <span class="value">600px</span>;
+  <span class="property">margin</span>: <span class="value">0 auto</span>;  <span class="comment">/* auto calculates equal left/right margins */</span>
+}</pre>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-title">Margin Collapse</div>
+        <p>When two vertical margins touch, they "collapse" into one (the larger value wins). This only happens vertically, not horizontally. It's a common source of confusion!</p>
+      </div>
+
+      <h2>Border</h2>
+
+      <p>Borders are visible edges around elements. You can control width, style, and color.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">borders.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="comment">/* Shorthand: width style color */</span>
+<span class="selector">.box</span> {
+  <span class="property">border</span>: <span class="value">2px solid #3b82f6</span>;
+}
+
+<span class="comment">/* Individual properties */</span>
+<span class="selector">.box</span> {
+  <span class="property">border-width</span>: <span class="value">2px</span>;
+  <span class="property">border-style</span>: <span class="value">solid</span>;   <span class="comment">/* solid, dashed, dotted, double, none */</span>
+  <span class="property">border-color</span>: <span class="value">#3b82f6</span>;
+}
+
+<span class="comment">/* Single side */</span>
+<span class="selector">.box</span> {
+  <span class="property">border-bottom</span>: <span class="value">3px solid #22c55e</span>;
+}
+
+<span class="comment">/* Rounded corners */</span>
+<span class="selector">.box</span> {
+  <span class="property">border-radius</span>: <span class="value">8px</span>;      <span class="comment">/* All corners */</span>
+  <span class="property">border-radius</span>: <span class="value">50%</span>;      <span class="comment">/* Circle (on square elements) */</span>
+  <span class="property">border-radius</span>: <span class="value">8px 0 0 8px</span>;  <span class="comment">/* Top-left, top-right, bottom-right, bottom-left */</span>
+}</pre>
+      </div>
+
+      <h2>Width and Height</h2>
+
+      <p>By default, <span class="inline-code">width</span> and <span class="inline-code">height</span> only set the <strong>content</strong> size. Padding and border are added on top!</p>
+
+      <div class="code-block">
+        <pre><span class="selector">.box</span> {
+  <span class="property">width</span>: <span class="value">300px</span>;
+  <span class="property">padding</span>: <span class="value">20px</span>;
+  <span class="property">border</span>: <span class="value">5px solid black</span>;
+}
+<span class="comment">/* Total width = 300 + 20 + 20 + 5 + 5 = 350px! */</span></pre>
+      </div>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">The Math Problem</div>
+        <p>With default box-sizing, a 300px wide box with 20px padding and 5px border is actually 350px wide. This makes layouts frustrating!</p>
+      </div>
+
+      <h2>The Fix: box-sizing: border-box</h2>
+
+      <p>This CSS property changes how width/height work. With <span class="inline-code">border-box</span>, padding and border are <strong>included</strong> in the width.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">reset.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="comment">/* Apply to ALL elements - do this in every project! */</span>
+<span class="selector">*</span> {
+  <span class="property">box-sizing</span>: <span class="value">border-box</span>;
+}
+
+<span class="comment">/* Now this box is exactly 300px wide total */</span>
+<span class="selector">.box</span> {
+  <span class="property">width</span>: <span class="value">300px</span>;
+  <span class="property">padding</span>: <span class="value">20px</span>;
+  <span class="property">border</span>: <span class="value">5px solid black</span>;
+}
+<span class="comment">/* Content area shrinks to fit: 300 - 40 - 10 = 250px */</span></pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">Always Use border-box</div>
+        <p>Add <span class="inline-code">* { box-sizing: border-box; }</span> at the top of every stylesheet. This is standard practice and makes layouts much more predictable.</p>
+      </div>
+
+      <h2>Practical Example: Card Component</h2>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">card.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="selector">.card</span> {
+  <span class="property">width</span>: <span class="value">320px</span>;
+  <span class="property">padding</span>: <span class="value">24px</span>;
+  <span class="property">margin</span>: <span class="value">16px</span>;
+
+  <span class="property">background</span>: <span class="value">#1c1c1f</span>;
+  <span class="property">border</span>: <span class="value">1px solid rgba(255, 255, 255, 0.1)</span>;
+  <span class="property">border-radius</span>: <span class="value">12px</span>;
+}
+
+<span class="selector">.card-title</span> {
+  <span class="property">margin-bottom</span>: <span class="value">12px</span>;
+  <span class="property">padding-bottom</span>: <span class="value">12px</span>;
+  <span class="property">border-bottom</span>: <span class="value">1px solid rgba(255, 255, 255, 0.1)</span>;
+}
+
+<span class="selector">.card-content</span> {
+  <span class="property">padding</span>: <span class="value">0</span>;  <span class="comment">/* Content doesn't need extra padding - card has it */</span>
+}</pre>
+      </div>
+
+      <div class="try-it">
+        <div class="try-it-title">Today's Project: Styled Cards</div>
+        <ol>
+          <li>Add <span class="inline-code">* { box-sizing: border-box; }</span> to your stylesheet</li>
+          <li>Create a <span class="inline-code">.card</span> class with:
+            <ul>
+              <li>Fixed width (300-350px)</li>
+              <li>Padding (20-24px)</li>
+              <li>Border and border-radius</li>
+              <li>Background color</li>
+            </ul>
+          </li>
+          <li>Create 3 cards in your HTML, each with a title and description</li>
+          <li>Use margin to space them apart</li>
+          <li>Experiment: What happens when you change padding? Border-radius?</li>
+        </ol>
+      </div>
+
+      <h2>Key Takeaways</h2>
+      <ul style="margin-left: 20px; color: var(--text-secondary);">
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Four layers:</strong> Content → Padding → Border → Margin</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Padding is inside</strong>, margin is outside</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Always use box-sizing: border-box</strong> for predictable sizing</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Shorthand:</strong> padding: top right bottom left (clockwise)</li>
+      </ul>
+    </div>
+
+    <nav class="lesson-nav">
+      <a href="css-intro.html" class="nav-btn">
+        <span>&larr;</span>
+        <div>
+          <div class="nav-btn-label">Previous</div>
+          <div class="nav-btn-title">CSS Introduction</div>
+        </div>
+      </a>
+      <a href="css-layout-basics.html" class="nav-btn primary">
+        <div>
+          <div class="nav-btn-label">Next Lesson</div>
+          <div class="nav-btn-title">CSS Layout Basics</div>
+        </div>
+        <span>&rarr;</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>

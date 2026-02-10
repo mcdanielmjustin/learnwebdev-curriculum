@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 4: Introduction to CSS | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #09090b;
+      --bg-secondary: #0f0f11;
+      --bg-card: #1c1c1f;
+      --bg-code: #0d1117;
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --accent: #3b82f6;
+      --accent-green: #22c55e;
+      --accent-purple: #a855f7;
+      --accent-orange: #f59e0b;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+    .lesson-container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .lesson-header { margin-bottom: 48px; }
+    .lesson-week { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(59, 130, 246, 0.15); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+    .lesson-title { font-family: var(--font-display); font-size: 2.5rem; line-height: 1.2; margin-bottom: 16px; }
+    .lesson-meta { display: flex; gap: 24px; color: var(--text-secondary); font-size: 0.9rem; }
+    .objectives-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+    .objectives-title { font-weight: 600; margin-bottom: 12px; }
+    .objectives-list { list-style: none; }
+    .objectives-list li { padding: 8px 0; padding-left: 28px; position: relative; color: var(--text-secondary); }
+    .objectives-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-green); font-weight: bold; }
+    .lesson-content h2 { font-family: var(--font-display); font-size: 1.75rem; margin: 48px 0 20px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .lesson-content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .lesson-content h3 { font-size: 1.25rem; margin: 32px 0 16px; }
+    .lesson-content p { color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content strong { color: var(--text-primary); }
+    .lesson-content ul, .lesson-content ol { margin-left: 20px; color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content li { margin: 8px 0; }
+    .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 24px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+    .code-filename { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+    .code-copy { padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; }
+    pre { padding: 20px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; }
+    .inline-code { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.9em; color: var(--accent-purple); font-family: var(--font-mono); }
+    .selector { color: #ff7b72; }
+    .property { color: #79c0ff; }
+    .value { color: #a5d6ff; }
+    .comment { color: #8b949e; }
+    .callout { padding: 20px 24px; border-radius: 12px; margin: 24px 0; border-left: 4px solid; }
+    .callout-info { background: rgba(59, 130, 246, 0.1); border-color: var(--accent); }
+    .callout-tip { background: rgba(34, 197, 94, 0.1); border-color: var(--accent-green); }
+    .callout-warning { background: rgba(245, 158, 11, 0.1); border-color: var(--accent-orange); }
+    .callout-title { font-weight: 600; margin-bottom: 8px; }
+    .callout p { margin: 0; color: var(--text-secondary); }
+    .try-it { background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 24px; margin: 32px 0; }
+    .try-it-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 12px; }
+    .try-it ol, .try-it ul { margin-left: 20px; color: var(--text-secondary); }
+    .try-it li { margin: 8px 0; }
+    .demo-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 24px 0; }
+    .demo-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+    .color-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; }
+    .color-swatch { padding: 20px 12px; border-radius: 8px; text-align: center; font-size: 0.75rem; font-family: var(--font-mono); }
+    .lesson-nav { display: flex; justify-content: space-between; margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .nav-btn { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--bg-secondary); border-color: var(--accent); }
+    .nav-btn-label { font-size: 0.8rem; color: var(--text-muted); }
+    .nav-btn-title { font-weight: 500; }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="breadcrumb">
+      <a href="/pages/dashboard.html">Dashboard</a> &rsaquo; Week 1 &rsaquo; Lesson 4
+    </div>
+
+    <header class="lesson-header">
+      <div class="lesson-week">Week 1 &bull; HTML & CSS Fundamentals</div>
+      <h1 class="lesson-title">Introduction to CSS</h1>
+      <div class="lesson-meta">
+        <span>45 min</span>
+        <span>Lesson 4 of 28</span>
+      </div>
+    </header>
+
+    <div class="objectives-box">
+      <div class="objectives-title">What you'll learn</div>
+      <ul class="objectives-list">
+        <li>Understand CSS syntax and how it works</li>
+        <li>Use different types of selectors</li>
+        <li>Apply colors, fonts, and basic styling</li>
+      </ul>
+    </div>
+
+    <div class="lesson-content">
+      <h2>What is CSS?</h2>
+
+      <p><strong>CSS</strong> stands for <strong>Cascading Style Sheets</strong>. While HTML defines the structure and content of a page, CSS controls how it <strong>looks</strong> — colors, fonts, spacing, layout, and more.</p>
+
+      <p>Think of it this way: HTML is the skeleton, CSS is the skin, clothes, and makeup.</p>
+
+      <div class="callout callout-info">
+        <div class="callout-title">Why "Cascading"?</div>
+        <p>Styles "cascade" down — if you style a parent element, children inherit those styles. Also, later rules can override earlier ones. This cascade is powerful once you understand it!</p>
+      </div>
+
+      <h2>CSS Syntax</h2>
+
+      <p>CSS uses a simple pattern: <strong>selector</strong> { <strong>property</strong>: <strong>value</strong>; }</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">style.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="comment">/* This is a CSS comment */</span>
+
+<span class="selector">h1</span> {
+  <span class="property">color</span>: <span class="value">blue</span>;
+  <span class="property">font-size</span>: <span class="value">32px</span>;
+}
+
+<span class="selector">p</span> {
+  <span class="property">color</span>: <span class="value">#333333</span>;
+  <span class="property">line-height</span>: <span class="value">1.6</span>;
+}</pre>
+      </div>
+
+      <ul>
+        <li><strong>Selector:</strong> What element(s) to style (<span class="inline-code">h1</span>, <span class="inline-code">p</span>, <span class="inline-code">.classname</span>)</li>
+        <li><strong>Property:</strong> What aspect to change (<span class="inline-code">color</span>, <span class="inline-code">font-size</span>)</li>
+        <li><strong>Value:</strong> The new value (<span class="inline-code">blue</span>, <span class="inline-code">32px</span>)</li>
+        <li><strong>Semicolon:</strong> Each declaration ends with <span class="inline-code">;</span></li>
+      </ul>
+
+      <h2>Three Ways to Add CSS</h2>
+
+      <h3>1. External Stylesheet (Best Practice!)</h3>
+      <p>Create a separate <span class="inline-code">.css</span> file and link it in your HTML:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">index.html</span>
+        </div>
+        <pre><span class="selector">&lt;head&gt;</span>
+  <span class="selector">&lt;link</span> <span class="property">rel</span>=<span class="value">"stylesheet"</span> <span class="property">href</span>=<span class="value">"styles.css"</span><span class="selector">&gt;</span>
+<span class="selector">&lt;/head&gt;</span></pre>
+      </div>
+
+      <h3>2. Internal Styles (In the &lt;head&gt;)</h3>
+
+      <div class="code-block">
+        <pre><span class="selector">&lt;head&gt;</span>
+  <span class="selector">&lt;style&gt;</span>
+    <span class="selector">h1</span> { <span class="property">color</span>: <span class="value">blue</span>; }
+  <span class="selector">&lt;/style&gt;</span>
+<span class="selector">&lt;/head&gt;</span></pre>
+      </div>
+
+      <h3>3. Inline Styles (Avoid When Possible)</h3>
+
+      <div class="code-block">
+        <pre><span class="selector">&lt;h1</span> <span class="property">style</span>=<span class="value">"color: blue; font-size: 32px;"</span><span class="selector">&gt;</span>Hello<span class="selector">&lt;/h1&gt;</span></pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">Always Use External Stylesheets</div>
+        <p>External CSS files keep your code organized, can be cached by browsers (faster loading), and let you style multiple pages with one file. Only use inline styles for quick testing.</p>
+      </div>
+
+      <h2>Selectors</h2>
+
+      <p>Selectors determine which elements your styles apply to. Here are the most important ones:</p>
+
+      <h3>Element Selector</h3>
+      <p>Selects all elements of that type:</p>
+      <div class="code-block">
+        <pre><span class="selector">p</span> { <span class="property">color</span>: <span class="value">gray</span>; }       <span class="comment">/* All paragraphs */</span>
+<span class="selector">h1</span> { <span class="property">font-size</span>: <span class="value">2rem</span>; }  <span class="comment">/* All h1 headings */</span></pre>
+      </div>
+
+      <h3>Class Selector</h3>
+      <p>Selects elements with a specific class (starts with a dot):</p>
+      <div class="code-block">
+        <pre><span class="comment">/* CSS */</span>
+<span class="selector">.highlight</span> { <span class="property">background</span>: <span class="value">yellow</span>; }
+<span class="selector">.card</span> { <span class="property">border</span>: <span class="value">1px solid #ddd</span>; }
+
+<span class="comment">&lt;!-- HTML --&gt;</span>
+<span class="selector">&lt;p</span> <span class="property">class</span>=<span class="value">"highlight"</span><span class="selector">&gt;</span>This is highlighted<span class="selector">&lt;/p&gt;</span>
+<span class="selector">&lt;div</span> <span class="property">class</span>=<span class="value">"card"</span><span class="selector">&gt;</span>This is a card<span class="selector">&lt;/div&gt;</span></pre>
+      </div>
+
+      <h3>ID Selector</h3>
+      <p>Selects ONE element with that ID (starts with #):</p>
+      <div class="code-block">
+        <pre><span class="comment">/* CSS */</span>
+<span class="selector">#main-header</span> { <span class="property">background</span>: <span class="value">navy</span>; }
+
+<span class="comment">&lt;!-- HTML --&gt;</span>
+<span class="selector">&lt;header</span> <span class="property">id</span>=<span class="value">"main-header"</span><span class="selector">&gt;</span>...<span class="selector">&lt;/header&gt;</span></pre>
+      </div>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">Classes vs IDs</div>
+        <p><strong>Classes</strong> can be used multiple times on a page. <strong>IDs</strong> must be unique — only one element per ID. In practice, use classes for styling and IDs for JavaScript or anchor links.</p>
+      </div>
+
+      <h2>Colors in CSS</h2>
+
+      <p>CSS offers several ways to specify colors:</p>
+
+      <div class="demo-box">
+        <div class="demo-label">Color Formats</div>
+        <div class="color-grid">
+          <div class="color-swatch" style="background: blue; color: white;">blue<br>(named)</div>
+          <div class="color-swatch" style="background: #3b82f6; color: white;">#3b82f6<br>(hex)</div>
+          <div class="color-swatch" style="background: rgb(59, 130, 246); color: white;">rgb(59,130,246)</div>
+          <div class="color-swatch" style="background: rgba(59, 130, 246, 0.5); color: white;">rgba (50%)</div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <pre><span class="comment">/* Named colors */</span>
+<span class="property">color</span>: <span class="value">red</span>;
+<span class="property">color</span>: <span class="value">dodgerblue</span>;
+
+<span class="comment">/* Hex (most common) */</span>
+<span class="property">color</span>: <span class="value">#ff0000</span>;      <span class="comment">/* red */</span>
+<span class="property">color</span>: <span class="value">#3b82f6</span>;      <span class="comment">/* blue */</span>
+
+<span class="comment">/* RGB */</span>
+<span class="property">color</span>: <span class="value">rgb(255, 0, 0)</span>;
+
+<span class="comment">/* RGBA (with transparency) */</span>
+<span class="property">color</span>: <span class="value">rgba(0, 0, 0, 0.5)</span>;  <span class="comment">/* 50% transparent black */</span></pre>
+      </div>
+
+      <h2>Basic Text Styling</h2>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">typography.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="selector">body</span> {
+  <span class="comment">/* Font family with fallbacks */</span>
+  <span class="property">font-family</span>: <span class="value">'Inter', Arial, sans-serif</span>;
+
+  <span class="comment">/* Base font size */</span>
+  <span class="property">font-size</span>: <span class="value">16px</span>;
+
+  <span class="comment">/* Line spacing */</span>
+  <span class="property">line-height</span>: <span class="value">1.6</span>;
+
+  <span class="comment">/* Text color */</span>
+  <span class="property">color</span>: <span class="value">#333</span>;
+}
+
+<span class="selector">h1</span> {
+  <span class="property">font-size</span>: <span class="value">2.5rem</span>;      <span class="comment">/* Relative to root font size */</span>
+  <span class="property">font-weight</span>: <span class="value">700</span>;       <span class="comment">/* Bold */</span>
+  <span class="property">text-align</span>: <span class="value">center</span>;    <span class="comment">/* Center text */</span>
+  <span class="property">text-transform</span>: <span class="value">uppercase</span>;
+}
+
+<span class="selector">a</span> {
+  <span class="property">color</span>: <span class="value">#3b82f6</span>;
+  <span class="property">text-decoration</span>: <span class="value">none</span>;  <span class="comment">/* Remove underline */</span>
+}
+
+<span class="selector">a:hover</span> {
+  <span class="property">text-decoration</span>: <span class="value">underline</span>;  <span class="comment">/* Underline on hover */</span>
+}</pre>
+      </div>
+
+      <div class="try-it">
+        <div class="try-it-title">Today's Project: Style Your About Me Page</div>
+        <ol>
+          <li>Create <span class="inline-code">styles.css</span> and link it to your <span class="inline-code">about.html</span></li>
+          <li>Set a nice <span class="inline-code">font-family</span> on the body (try: 'Segoe UI', Arial, sans-serif)</li>
+          <li>Style your <span class="inline-code">h1</span> with a custom color and larger size</li>
+          <li>Create a <span class="inline-code">.highlight</span> class with a background color and apply it to important text</li>
+          <li>Style links to be a different color, and add a hover effect</li>
+          <li>Set a subtle background color on the body (<span class="inline-code">#f5f5f5</span> works great)</li>
+        </ol>
+      </div>
+
+      <h2>Key Takeaways</h2>
+      <ul style="margin-left: 20px; color: var(--text-secondary);">
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">CSS syntax:</strong> selector { property: value; }</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Use external stylesheets</strong> — cleaner and more maintainable</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Classes (.name) for reusable styles</strong>, IDs (#name) for unique elements</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Colors:</strong> named, hex (#fff), rgb(), or rgba()</li>
+      </ul>
+    </div>
+
+    <nav class="lesson-nav">
+      <a href="html-links-images.html" class="nav-btn">
+        <span>&larr;</span>
+        <div>
+          <div class="nav-btn-label">Previous</div>
+          <div class="nav-btn-title">Links & Images</div>
+        </div>
+      </a>
+      <a href="css-box-model.html" class="nav-btn primary">
+        <div>
+          <div class="nav-btn-label">Next Lesson</div>
+          <div class="nav-btn-title">The CSS Box Model</div>
+        </div>
+        <span>&rarr;</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>
