@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3: Links, Images & Semantic HTML | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #09090b;
+      --bg-secondary: #0f0f11;
+      --bg-card: #1c1c1f;
+      --bg-code: #0d1117;
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --accent: #3b82f6;
+      --accent-green: #22c55e;
+      --accent-purple: #a855f7;
+      --accent-orange: #f59e0b;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+    .lesson-container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .lesson-header { margin-bottom: 48px; }
+    .lesson-week { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(59, 130, 246, 0.15); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+    .lesson-title { font-family: var(--font-display); font-size: 2.5rem; line-height: 1.2; margin-bottom: 16px; }
+    .lesson-meta { display: flex; gap: 24px; color: var(--text-secondary); font-size: 0.9rem; }
+    .objectives-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+    .objectives-title { font-weight: 600; margin-bottom: 12px; }
+    .objectives-list { list-style: none; }
+    .objectives-list li { padding: 8px 0; padding-left: 28px; position: relative; color: var(--text-secondary); }
+    .objectives-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-green); font-weight: bold; }
+    .lesson-content h2 { font-family: var(--font-display); font-size: 1.75rem; margin: 48px 0 20px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .lesson-content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .lesson-content h3 { font-size: 1.25rem; margin: 32px 0 16px; }
+    .lesson-content p { color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content strong { color: var(--text-primary); }
+    .lesson-content ul, .lesson-content ol { margin-left: 20px; color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content li { margin: 8px 0; }
+    .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 24px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+    .code-filename { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+    .code-copy { padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; }
+    pre { padding: 20px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; }
+    .inline-code { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.9em; color: var(--accent-purple); font-family: var(--font-mono); }
+    .tag { color: #ff7b72; }
+    .attr { color: #79c0ff; }
+    .string { color: #a5d6ff; }
+    .comment { color: #8b949e; }
+    .callout { padding: 20px 24px; border-radius: 12px; margin: 24px 0; border-left: 4px solid; }
+    .callout-info { background: rgba(59, 130, 246, 0.1); border-color: var(--accent); }
+    .callout-tip { background: rgba(34, 197, 94, 0.1); border-color: var(--accent-green); }
+    .callout-warning { background: rgba(245, 158, 11, 0.1); border-color: var(--accent-orange); }
+    .callout-title { font-weight: 600; margin-bottom: 8px; }
+    .callout p { margin: 0; color: var(--text-secondary); }
+    .try-it { background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 24px; margin: 32px 0; }
+    .try-it-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 12px; }
+    .try-it ol, .try-it ul { margin-left: 20px; color: var(--text-secondary); }
+    .try-it li { margin: 8px 0; }
+    .visual-demo { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin: 24px 0; }
+    .visual-demo-title { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.1em; }
+    .lesson-nav { display: flex; justify-content: space-between; margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .nav-btn { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--bg-secondary); border-color: var(--accent); }
+    .nav-btn-label { font-size: 0.8rem; color: var(--text-muted); }
+    .nav-btn-title { font-weight: 500; }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="breadcrumb">
+      <a href="/pages/dashboard.html">Dashboard</a> &rsaquo; Week 1 &rsaquo; Lesson 3
+    </div>
+
+    <header class="lesson-header">
+      <div class="lesson-week">Week 1 &bull; HTML & CSS Fundamentals</div>
+      <h1 class="lesson-title">Links, Images & Semantic HTML</h1>
+      <div class="lesson-meta">
+        <span>45 min</span>
+        <span>Lesson 3 of 28</span>
+      </div>
+    </header>
+
+    <div class="objectives-box">
+      <div class="objectives-title">What you'll learn</div>
+      <ul class="objectives-list">
+        <li>Create links between pages and to external sites</li>
+        <li>Add images with proper attributes</li>
+        <li>Use semantic HTML tags for better structure</li>
+      </ul>
+    </div>
+
+    <div class="lesson-content">
+      <h2>Links: The Web's Superpower</h2>
+
+      <p>Links are what make the web a <strong>web</strong>. They connect pages together, creating the interconnected experience we all use every day. The anchor tag <span class="inline-code">&lt;a&gt;</span> creates links.</p>
+
+      <h3>Basic Link Syntax</h3>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">links.html</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="comment">&lt;!-- Link to another website --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="string">"https://google.com"</span><span class="tag">&gt;</span>Go to Google<span class="tag">&lt;/a&gt;</span>
+
+<span class="comment">&lt;!-- Link to another page on your site --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="string">"about.html"</span><span class="tag">&gt;</span>About Us<span class="tag">&lt;/a&gt;</span>
+
+<span class="comment">&lt;!-- Link to a section on the same page --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="string">"#contact"</span><span class="tag">&gt;</span>Jump to Contact<span class="tag">&lt;/a&gt;</span>
+
+<span class="comment">&lt;!-- Link that opens in new tab --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="string">"https://github.com"</span> <span class="attr">target</span>=<span class="string">"_blank"</span><span class="tag">&gt;</span>GitHub (new tab)<span class="tag">&lt;/a&gt;</span></pre>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-title">The href Attribute</div>
+        <p><strong>href</strong> stands for "hypertext reference" — it tells the browser where to go when clicked. It can be a full URL, a relative path, or an ID reference (#).</p>
+      </div>
+
+      <h3>Link Paths Explained</h3>
+
+      <ul>
+        <li><strong>Absolute URLs:</strong> <span class="inline-code">https://example.com/page</span> — full address, used for external sites</li>
+        <li><strong>Relative paths:</strong> <span class="inline-code">about.html</span> or <span class="inline-code">pages/contact.html</span> — relative to current file</li>
+        <li><strong>Root-relative:</strong> <span class="inline-code">/pages/about.html</span> — starts from website root</li>
+        <li><strong>Anchor links:</strong> <span class="inline-code">#section-id</span> — jumps to an element with that ID</li>
+      </ul>
+
+      <h2>Images</h2>
+
+      <p>The <span class="inline-code">&lt;img&gt;</span> tag embeds images. It's a <strong>self-closing tag</strong> — no closing tag needed!</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">images.html</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="comment">&lt;!-- Basic image --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="string">"photo.jpg"</span> <span class="attr">alt</span>=<span class="string">"A beautiful sunset"</span><span class="tag">&gt;</span>
+
+<span class="comment">&lt;!-- Image with size constraints --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="string">"logo.png"</span> <span class="attr">alt</span>=<span class="string">"Company Logo"</span> <span class="attr">width</span>=<span class="string">"200"</span><span class="tag">&gt;</span>
+
+<span class="comment">&lt;!-- Image from the web --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="string">"https://example.com/image.jpg"</span> <span class="attr">alt</span>=<span class="string">"Description"</span><span class="tag">&gt;</span></pre>
+      </div>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">Always Use Alt Text!</div>
+        <p>The <span class="inline-code">alt</span> attribute is <strong>required</strong> for accessibility. Screen readers read it aloud for visually impaired users. It also shows if the image fails to load. Write descriptive alt text!</p>
+      </div>
+
+      <h3>Image Best Practices</h3>
+
+      <ul>
+        <li><strong>Optimize file size</strong> — large images slow down your site</li>
+        <li><strong>Use descriptive filenames</strong> — <span class="inline-code">team-photo.jpg</span> not <span class="inline-code">IMG_12345.jpg</span></li>
+        <li><strong>Choose the right format</strong> — JPG for photos, PNG for graphics with transparency, SVG for icons</li>
+        <li><strong>Set dimensions</strong> — prevents layout shift while loading</li>
+      </ul>
+
+      <h2>Semantic HTML</h2>
+
+      <p>Semantic tags describe the <strong>meaning</strong> of content, not just how it looks. This helps browsers, search engines, and screen readers understand your page structure.</p>
+
+      <h3>The Old Way (Don't Do This)</h3>
+
+      <div class="code-block">
+        <pre><span class="comment">&lt;!-- Non-semantic: divs everywhere! --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"header"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"navigation"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"main-content"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"footer"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span></pre>
+      </div>
+
+      <h3>The Right Way (Semantic HTML5)</h3>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">semantic.html</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="tag">&lt;header&gt;</span>
+  <span class="tag">&lt;nav&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="string">"/"</span><span class="tag">&gt;</span>Home<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="string">"/about"</span><span class="tag">&gt;</span>About<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="string">"/contact"</span><span class="tag">&gt;</span>Contact<span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;/nav&gt;</span>
+<span class="tag">&lt;/header&gt;</span>
+
+<span class="tag">&lt;main&gt;</span>
+  <span class="tag">&lt;article&gt;</span>
+    <span class="tag">&lt;h1&gt;</span>Article Title<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Article content...<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/article&gt;</span>
+
+  <span class="tag">&lt;aside&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>Related Links<span class="tag">&lt;/h2&gt;</span>
+    <span class="comment">&lt;!-- Sidebar content --&gt;</span>
+  <span class="tag">&lt;/aside&gt;</span>
+<span class="tag">&lt;/main&gt;</span>
+
+<span class="tag">&lt;footer&gt;</span>
+  <span class="tag">&lt;p&gt;</span>&copy; 2026 My Website<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/footer&gt;</span></pre>
+      </div>
+
+      <h3>Key Semantic Tags</h3>
+
+      <ul>
+        <li><span class="inline-code">&lt;header&gt;</span> — Top section, usually contains logo and navigation</li>
+        <li><span class="inline-code">&lt;nav&gt;</span> — Navigation links</li>
+        <li><span class="inline-code">&lt;main&gt;</span> — The main content (only one per page!)</li>
+        <li><span class="inline-code">&lt;article&gt;</span> — Self-contained content (blog post, news article)</li>
+        <li><span class="inline-code">&lt;section&gt;</span> — Thematic grouping of content</li>
+        <li><span class="inline-code">&lt;aside&gt;</span> — Sidebar, related content</li>
+        <li><span class="inline-code">&lt;footer&gt;</span> — Bottom section, copyright, links</li>
+      </ul>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">Why Semantic HTML Matters</div>
+        <p><strong>SEO:</strong> Search engines understand your content better. <strong>Accessibility:</strong> Screen readers can navigate by landmarks. <strong>Maintainability:</strong> Code is easier to read and understand.</p>
+      </div>
+
+      <div class="try-it">
+        <div class="try-it-title">Today's Project: Multi-Page Portfolio</div>
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">Create a 3-page portfolio site structure:</p>
+        <ol>
+          <li>Create three files: <span class="inline-code">index.html</span>, <span class="inline-code">projects.html</span>, <span class="inline-code">contact.html</span></li>
+          <li>Each page should have the same <span class="inline-code">&lt;header&gt;</span> with <span class="inline-code">&lt;nav&gt;</span> linking to all three pages</li>
+          <li>Use <span class="inline-code">&lt;main&gt;</span> for unique content on each page</li>
+          <li>Add a <span class="inline-code">&lt;footer&gt;</span> with your name and copyright</li>
+          <li>On the projects page, add at least 2 images with proper alt text</li>
+          <li>On the contact page, add a link to your email: <span class="inline-code">href="mailto:you@email.com"</span></li>
+        </ol>
+      </div>
+
+      <h2>Key Takeaways</h2>
+      <ul style="margin-left: 20px; color: var(--text-secondary);">
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Links use &lt;a href=""&gt;</strong> — connect pages and the web together</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Images need alt text</strong> — for accessibility and SEO</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Semantic tags describe meaning</strong> — header, nav, main, article, footer</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Structure matters</strong> — good HTML makes everything else easier</li>
+      </ul>
+    </div>
+
+    <nav class="lesson-nav">
+      <a href="html-elements.html" class="nav-btn">
+        <span>&larr;</span>
+        <div>
+          <div class="nav-btn-label">Previous</div>
+          <div class="nav-btn-title">HTML Elements</div>
+        </div>
+      </a>
+      <a href="css-intro.html" class="nav-btn primary">
+        <div>
+          <div class="nav-btn-label">Next Lesson</div>
+          <div class="nav-btn-title">Introduction to CSS</div>
+        </div>
+        <span>&rarr;</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>

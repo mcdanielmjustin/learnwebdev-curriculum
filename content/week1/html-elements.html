@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 2: HTML Elements | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #09090b;
+      --bg-secondary: #0f0f11;
+      --bg-card: #1c1c1f;
+      --bg-code: #0d1117;
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --accent: #3b82f6;
+      --accent-green: #22c55e;
+      --accent-purple: #a855f7;
+      --accent-orange: #f59e0b;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+    .lesson-container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .lesson-header { margin-bottom: 48px; }
+    .lesson-week { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(59, 130, 246, 0.15); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+    .lesson-title { font-family: var(--font-display); font-size: 2.5rem; line-height: 1.2; margin-bottom: 16px; }
+    .lesson-meta { display: flex; gap: 24px; color: var(--text-secondary); font-size: 0.9rem; }
+    .objectives-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+    .objectives-title { font-weight: 600; margin-bottom: 12px; }
+    .objectives-list { list-style: none; }
+    .objectives-list li { padding: 8px 0; padding-left: 28px; position: relative; color: var(--text-secondary); }
+    .objectives-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-green); font-weight: bold; }
+    .lesson-content h2 { font-family: var(--font-display); font-size: 1.75rem; margin: 48px 0 20px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .lesson-content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .lesson-content h3 { font-size: 1.25rem; margin: 32px 0 16px; }
+    .lesson-content p { color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content strong { color: var(--text-primary); }
+    .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 24px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+    .code-filename { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+    .code-copy { padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; }
+    pre { padding: 20px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; }
+    .inline-code { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.9em; color: var(--accent-purple); font-family: var(--font-mono); }
+    .tag { color: #ff7b72; }
+    .attr { color: #79c0ff; }
+    .string { color: #a5d6ff; }
+    .comment { color: #8b949e; }
+    .callout { padding: 20px 24px; border-radius: 12px; margin: 24px 0; border-left: 4px solid; }
+    .callout-info { background: rgba(59, 130, 246, 0.1); border-color: var(--accent); }
+    .callout-tip { background: rgba(34, 197, 94, 0.1); border-color: var(--accent-green); }
+    .callout-title { font-weight: 600; margin-bottom: 8px; }
+    .callout p { margin: 0; color: var(--text-secondary); }
+    .try-it { background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 24px; margin: 32px 0; }
+    .try-it-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 12px; }
+    .try-it ol, .try-it ul { margin-left: 20px; color: var(--text-secondary); }
+    .try-it li { margin: 8px 0; }
+    .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+    .comparison-table th, .comparison-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    .comparison-table th { color: var(--text-primary); font-weight: 600; }
+    .comparison-table td { color: var(--text-secondary); }
+    .comparison-table code { color: var(--accent-purple); }
+    .lesson-nav { display: flex; justify-content: space-between; margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .nav-btn { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--bg-secondary); border-color: var(--accent); }
+    .nav-btn-label { font-size: 0.8rem; color: var(--text-muted); }
+    .nav-btn-title { font-weight: 500; }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="breadcrumb">
+      <a href="/pages/dashboard.html">Dashboard</a> &rsaquo; Week 1 &rsaquo; Lesson 2
+    </div>
+
+    <header class="lesson-header">
+      <div class="lesson-week">Week 1 &bull; HTML & CSS Fundamentals</div>
+      <h1 class="lesson-title">HTML Elements: Text & Lists</h1>
+      <div class="lesson-meta">
+        <span>45 min</span>
+        <span>Lesson 2 of 28</span>
+      </div>
+    </header>
+
+    <div class="objectives-box">
+      <div class="objectives-title">What you'll learn</div>
+      <ul class="objectives-list">
+        <li>Use headings (h1-h6) to structure content</li>
+        <li>Create paragraphs and line breaks</li>
+        <li>Build ordered and unordered lists</li>
+      </ul>
+    </div>
+
+    <div class="lesson-content">
+      <h2>Headings: h1 through h6</h2>
+
+      <p>Headings create hierarchy in your content. They range from <span class="inline-code">&lt;h1&gt;</span> (most important) to <span class="inline-code">&lt;h6&gt;</span> (least important).</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">headings.html</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="tag">&lt;h1&gt;</span>Main Page Title<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;h2&gt;</span>Section Heading<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;h3&gt;</span>Subsection<span class="tag">&lt;/h3&gt;</span>
+<span class="tag">&lt;h4&gt;</span>Sub-subsection<span class="tag">&lt;/h4&gt;</span>
+<span class="tag">&lt;h5&gt;</span>Minor heading<span class="tag">&lt;/h5&gt;</span>
+<span class="tag">&lt;h6&gt;</span>Smallest heading<span class="tag">&lt;/h6&gt;</span></pre>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-title">SEO Tip</div>
+        <p>Use only ONE <span class="inline-code">&lt;h1&gt;</span> per page. Search engines use it to understand your page's main topic. Use h2-h6 for subsections.</p>
+      </div>
+
+      <h2>Text Elements</h2>
+
+      <h3>Paragraphs</h3>
+      <p>The <span class="inline-code">&lt;p&gt;</span> tag defines a paragraph. Browsers automatically add space before and after paragraphs.</p>
+
+      <div class="code-block">
+        <pre><span class="tag">&lt;p&gt;</span>This is a paragraph of text. It can be as long as you want.<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span>This is another paragraph. Notice the automatic spacing.<span class="tag">&lt;/p&gt;</span></pre>
+      </div>
+
+      <h3>Text Formatting</h3>
+
+      <table class="comparison-table">
+        <tr>
+          <th>Element</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>&lt;strong&gt;</code></td>
+          <td>Important text (bold)</td>
+          <td><strong>Important</strong></td>
+        </tr>
+        <tr>
+          <td><code>&lt;em&gt;</code></td>
+          <td>Emphasized text (italic)</td>
+          <td><em>Emphasized</em></td>
+        </tr>
+        <tr>
+          <td><code>&lt;mark&gt;</code></td>
+          <td>Highlighted text</td>
+          <td><mark style="background:#fef08a;color:#000;">Highlighted</mark></td>
+        </tr>
+        <tr>
+          <td><code>&lt;small&gt;</code></td>
+          <td>Smaller text</td>
+          <td><small>Small print</small></td>
+        </tr>
+        <tr>
+          <td><code>&lt;del&gt;</code></td>
+          <td>Deleted/strikethrough</td>
+          <td><del>Removed</del></td>
+        </tr>
+      </table>
+
+      <div class="code-block">
+        <pre><span class="tag">&lt;p&gt;</span>
+  This text is <span class="tag">&lt;strong&gt;</span>very important<span class="tag">&lt;/strong&gt;</span> and this is
+  <span class="tag">&lt;em&gt;</span>emphasized<span class="tag">&lt;/em&gt;</span>. You can also <span class="tag">&lt;mark&gt;</span>highlight<span class="tag">&lt;/mark&gt;</span> text.
+<span class="tag">&lt;/p&gt;</span></pre>
+      </div>
+
+      <h2>Lists</h2>
+
+      <p>HTML has three types of lists. You'll use the first two constantly!</p>
+
+      <h3>Unordered Lists (Bullets)</h3>
+      <p>Use <span class="inline-code">&lt;ul&gt;</span> for lists where order doesn't matter:</p>
+
+      <div class="code-block">
+        <pre><span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>HTML<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>CSS<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>JavaScript<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span></pre>
+      </div>
+
+      <h3>Ordered Lists (Numbers)</h3>
+      <p>Use <span class="inline-code">&lt;ol&gt;</span> for sequential steps or rankings:</p>
+
+      <div class="code-block">
+        <pre><span class="tag">&lt;ol&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Preheat oven to 350°F<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Mix ingredients<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Bake for 25 minutes<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ol&gt;</span></pre>
+      </div>
+
+      <h3>Nested Lists</h3>
+      <p>You can put lists inside lists for subcategories:</p>
+
+      <div class="code-block">
+        <pre><span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Frontend
+    <span class="tag">&lt;ul&gt;</span>
+      <span class="tag">&lt;li&gt;</span>HTML<span class="tag">&lt;/li&gt;</span>
+      <span class="tag">&lt;li&gt;</span>CSS<span class="tag">&lt;/li&gt;</span>
+      <span class="tag">&lt;li&gt;</span>JavaScript<span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;/ul&gt;</span>
+  <span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Backend
+    <span class="tag">&lt;ul&gt;</span>
+      <span class="tag">&lt;li&gt;</span>Node.js<span class="tag">&lt;/li&gt;</span>
+      <span class="tag">&lt;li&gt;</span>Python<span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;/ul&gt;</span>
+  <span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span></pre>
+      </div>
+
+      <div class="try-it">
+        <div class="try-it-title">Today's Project: Recipe Page</div>
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">Create a recipe page using everything you've learned:</p>
+        <ol>
+          <li>Create <span class="inline-code">recipe.html</span> with proper document structure</li>
+          <li>Add an <span class="inline-code">&lt;h1&gt;</span> with the recipe name</li>
+          <li>Add a <span class="inline-code">&lt;p&gt;</span> describing the dish</li>
+          <li>Create an <span class="inline-code">&lt;h2&gt;</span> for "Ingredients" followed by a <span class="inline-code">&lt;ul&gt;</span></li>
+          <li>Create an <span class="inline-code">&lt;h2&gt;</span> for "Instructions" followed by an <span class="inline-code">&lt;ol&gt;</span></li>
+          <li>Use <span class="inline-code">&lt;strong&gt;</span> to highlight important ingredients</li>
+        </ol>
+      </div>
+
+      <h2>Key Takeaways</h2>
+      <ul style="margin-left: 20px; color: var(--text-secondary);">
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Headings create hierarchy</strong> &mdash; h1 is most important, h6 least</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Use semantic tags</strong> &mdash; <span class="inline-code">&lt;strong&gt;</span> not just bold for importance</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">ul for bullets, ol for numbers</strong> &mdash; both use <span class="inline-code">&lt;li&gt;</span> for items</li>
+      </ul>
+    </div>
+
+    <nav class="lesson-nav">
+      <a href="html-intro.html" class="nav-btn">
+        <span>&larr;</span>
+        <div>
+          <div class="nav-btn-label">Previous</div>
+          <div class="nav-btn-title">HTML Intro</div>
+        </div>
+      </a>
+      <a href="html-links-images.html" class="nav-btn primary">
+        <div>
+          <div class="nav-btn-label">Next Lesson</div>
+          <div class="nav-btn-title">Links & Images</div>
+        </div>
+        <span>&rarr;</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>
