@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 6: CSS Layout Basics | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #09090b; --bg-secondary: #0f0f11; --bg-card: #1c1c1f; --bg-code: #0d1117;
+      --text-primary: #fafafa; --text-secondary: #a1a1aa; --text-muted: #71717a;
+      --accent: #3b82f6; --accent-green: #22c55e; --accent-purple: #a855f7; --accent-orange: #f59e0b;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+    .lesson-container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .lesson-header { margin-bottom: 48px; }
+    .lesson-week { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(59, 130, 246, 0.15); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+    .lesson-title { font-family: var(--font-display); font-size: 2.5rem; line-height: 1.2; margin-bottom: 16px; }
+    .lesson-meta { display: flex; gap: 24px; color: var(--text-secondary); font-size: 0.9rem; }
+    .objectives-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+    .objectives-title { font-weight: 600; margin-bottom: 12px; }
+    .objectives-list { list-style: none; }
+    .objectives-list li { padding: 8px 0; padding-left: 28px; position: relative; color: var(--text-secondary); }
+    .objectives-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-green); font-weight: bold; }
+    .lesson-content h2 { font-family: var(--font-display); font-size: 1.75rem; margin: 48px 0 20px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .lesson-content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .lesson-content h3 { font-size: 1.25rem; margin: 32px 0 16px; }
+    .lesson-content p { color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content strong { color: var(--text-primary); }
+    .lesson-content ul, .lesson-content ol { margin-left: 20px; color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content li { margin: 8px 0; }
+    .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 24px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+    .code-filename { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+    .code-copy { padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; }
+    pre { padding: 20px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; }
+    .inline-code { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.9em; color: var(--accent-purple); font-family: var(--font-mono); }
+    .selector { color: #ff7b72; } .property { color: #79c0ff; } .value { color: #a5d6ff; } .comment { color: #8b949e; }
+    .callout { padding: 20px 24px; border-radius: 12px; margin: 24px 0; border-left: 4px solid; }
+    .callout-info { background: rgba(59, 130, 246, 0.1); border-color: var(--accent); }
+    .callout-tip { background: rgba(34, 197, 94, 0.1); border-color: var(--accent-green); }
+    .callout-warning { background: rgba(245, 158, 11, 0.1); border-color: var(--accent-orange); }
+    .callout-title { font-weight: 600; margin-bottom: 8px; }
+    .callout p { margin: 0; color: var(--text-secondary); }
+    .try-it { background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 24px; margin: 32px 0; }
+    .try-it-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 12px; }
+    .try-it ol, .try-it ul { margin-left: 20px; color: var(--text-secondary); }
+    .try-it li { margin: 8px 0; }
+
+    /* Demo boxes */
+    .demo-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 24px 0; }
+    .demo-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+    .display-demo { display: flex; gap: 16px; flex-wrap: wrap; }
+    .demo-box { padding: 16px 24px; background: rgba(59, 130, 246, 0.2); border: 1px solid var(--accent); border-radius: 8px; font-size: 0.85rem; }
+
+    .lesson-nav { display: flex; justify-content: space-between; margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .nav-btn { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--bg-secondary); border-color: var(--accent); }
+    .nav-btn-label { font-size: 0.8rem; color: var(--text-muted); }
+    .nav-btn-title { font-weight: 500; }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="breadcrumb">
+      <a href="/pages/dashboard.html">Dashboard</a> &rsaquo; Week 1 &rsaquo; Lesson 6
+    </div>
+
+    <header class="lesson-header">
+      <div class="lesson-week">Week 1 &bull; HTML & CSS Fundamentals</div>
+      <h1 class="lesson-title">CSS Layout Basics</h1>
+      <div class="lesson-meta">
+        <span>45 min</span>
+        <span>Lesson 6 of 28</span>
+      </div>
+    </header>
+
+    <div class="objectives-box">
+      <div class="objectives-title">What you'll learn</div>
+      <ul class="objectives-list">
+        <li>Understand the display property (block, inline, inline-block)</li>
+        <li>Use position (relative, absolute, fixed, sticky)</li>
+        <li>Control how elements flow on the page</li>
+      </ul>
+    </div>
+
+    <div class="lesson-content">
+      <h2>The Display Property</h2>
+
+      <p>Every HTML element has a default <span class="inline-code">display</span> value that determines how it behaves in the page flow. Understanding this is crucial for layout.</p>
+
+      <h3>Block Elements</h3>
+      <p>Block elements take up the <strong>full width</strong> available and start on a <strong>new line</strong>.</p>
+
+      <div class="code-block">
+        <pre><span class="comment">/* Block elements: div, p, h1-h6, section, article, header, footer, etc. */</span>
+
+<span class="selector">.block-example</span> {
+  <span class="property">display</span>: <span class="value">block</span>;
+  <span class="property">width</span>: <span class="value">100%</span>;  <span class="comment">/* Takes full width by default */</span>
+}</pre>
+      </div>
+
+      <h3>Inline Elements</h3>
+      <p>Inline elements only take up as much width as needed and <strong>don't break the line</strong>. They flow with text.</p>
+
+      <div class="code-block">
+        <pre><span class="comment">/* Inline elements: span, a, strong, em, img, etc. */</span>
+
+<span class="selector">.inline-example</span> {
+  <span class="property">display</span>: <span class="value">inline</span>;
+}
+
+<span class="comment">/* WARNING: width and height have NO effect on inline elements! */</span></pre>
+      </div>
+
+      <h3>Inline-Block: Best of Both</h3>
+      <p>Inline-block elements flow inline BUT you can set width and height!</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">inline-block.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="selector">.button</span> {
+  <span class="property">display</span>: <span class="value">inline-block</span>;
+  <span class="property">padding</span>: <span class="value">12px 24px</span>;
+  <span class="property">width</span>: <span class="value">150px</span>;       <span class="comment">/* Works! */</span>
+  <span class="property">text-align</span>: <span class="value">center</span>;
+}
+
+<span class="comment">/* Multiple buttons will sit side-by-side */</span></pre>
+      </div>
+
+      <div class="demo-container">
+        <div class="demo-label">Display Comparison</div>
+        <div style="margin-bottom: 16px;">
+          <span style="background: rgba(239, 68, 68, 0.3); padding: 8px;">Inline</span>
+          <span style="background: rgba(239, 68, 68, 0.3); padding: 8px;">Inline</span>
+          <span style="background: rgba(239, 68, 68, 0.3); padding: 8px;">Inline</span>
+        </div>
+        <div style="display: inline-block; background: rgba(34, 197, 94, 0.3); padding: 8px 16px; width: 120px; text-align: center; margin-right: 8px;">Inline-block</div>
+        <div style="display: inline-block; background: rgba(34, 197, 94, 0.3); padding: 8px 16px; width: 120px; text-align: center;">Inline-block</div>
+        <div style="background: rgba(59, 130, 246, 0.3); padding: 12px; margin-top: 16px;">Block (full width)</div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">Common Pattern</div>
+        <p>Navigation links are often styled with <span class="inline-code">display: inline-block</span> so they sit side-by-side but can have padding, width, and height.</p>
+      </div>
+
+      <h2>The Position Property</h2>
+
+      <p>Position controls HOW an element is placed on the page. Combined with <span class="inline-code">top</span>, <span class="inline-code">right</span>, <span class="inline-code">bottom</span>, <span class="inline-code">left</span>, it gives you precise control.</p>
+
+      <h3>position: static (Default)</h3>
+      <p>Normal document flow. top/right/bottom/left have no effect.</p>
+
+      <h3>position: relative</h3>
+      <p>Positioned <strong>relative to its normal position</strong>. The original space is preserved.</p>
+
+      <div class="code-block">
+        <pre><span class="selector">.nudged</span> {
+  <span class="property">position</span>: <span class="value">relative</span>;
+  <span class="property">top</span>: <span class="value">10px</span>;    <span class="comment">/* Moves DOWN 10px from normal position */</span>
+  <span class="property">left</span>: <span class="value">20px</span>;   <span class="comment">/* Moves RIGHT 20px from normal position */</span>
+}</pre>
+      </div>
+
+      <h3>position: absolute</h3>
+      <p>Removed from normal flow. Positioned relative to its <strong>nearest positioned ancestor</strong> (or the viewport if none).</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">absolute.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="comment">/* Parent needs position: relative to contain the absolute child */</span>
+<span class="selector">.parent</span> {
+  <span class="property">position</span>: <span class="value">relative</span>;
+}
+
+<span class="selector">.badge</span> {
+  <span class="property">position</span>: <span class="value">absolute</span>;
+  <span class="property">top</span>: <span class="value">-8px</span>;
+  <span class="property">right</span>: <span class="value">-8px</span>;
+  <span class="property">background</span>: <span class="value">red</span>;
+  <span class="property">border-radius</span>: <span class="value">50%</span>;
+  <span class="property">width</span>: <span class="value">24px</span>;
+  <span class="property">height</span>: <span class="value">24px</span>;
+}</pre>
+      </div>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">The Parent Trap</div>
+        <p>Absolute elements look for a positioned parent. If none exists, they position relative to the viewport. Always set <span class="inline-code">position: relative</span> on the parent you want to contain absolute children!</p>
+      </div>
+
+      <h3>position: fixed</h3>
+      <p>Positioned relative to the <strong>viewport</strong>. Stays in place when scrolling.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">fixed-header.css</span>
+          <button class="code-copy" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="selector">.fixed-header</span> {
+  <span class="property">position</span>: <span class="value">fixed</span>;
+  <span class="property">top</span>: <span class="value">0</span>;
+  <span class="property">left</span>: <span class="value">0</span>;
+  <span class="property">right</span>: <span class="value">0</span>;         <span class="comment">/* Stretch full width */</span>
+  <span class="property">height</span>: <span class="value">64px</span>;
+  <span class="property">background</span>: <span class="value">#09090b</span>;
+  <span class="property">z-index</span>: <span class="value">100</span>;    <span class="comment">/* Stay above other content */</span>
+}
+
+<span class="comment">/* Don't forget to add padding to body so content isn't hidden! */</span>
+<span class="selector">body</span> {
+  <span class="property">padding-top</span>: <span class="value">64px</span>;
+}</pre>
+      </div>
+
+      <h3>position: sticky</h3>
+      <p>Hybrid: acts like relative until you scroll past it, then becomes fixed.</p>
+
+      <div class="code-block">
+        <pre><span class="selector">.sticky-sidebar</span> {
+  <span class="property">position</span>: <span class="value">sticky</span>;
+  <span class="property">top</span>: <span class="value">20px</span>;  <span class="comment">/* Sticks 20px from top when scrolling */</span>
+}</pre>
+      </div>
+
+      <h2>Z-Index: Stacking Order</h2>
+
+      <p>When elements overlap, <span class="inline-code">z-index</span> controls which one appears on top. Higher values = closer to viewer.</p>
+
+      <div class="code-block">
+        <pre><span class="comment">/* Only works on positioned elements (not static) */</span>
+<span class="selector">.behind</span>  { <span class="property">position</span>: <span class="value">relative</span>; <span class="property">z-index</span>: <span class="value">1</span>; }
+<span class="selector">.in-front</span> { <span class="property">position</span>: <span class="value">relative</span>; <span class="property">z-index</span>: <span class="value">10</span>; }
+<span class="selector">.modal</span>    { <span class="property">position</span>: <span class="value">fixed</span>; <span class="property">z-index</span>: <span class="value">1000</span>; }  <span class="comment">/* Above everything */</span></pre>
+      </div>
+
+      <div class="try-it">
+        <div class="try-it-title">Today's Project: Fixed Navigation Header</div>
+        <ol>
+          <li>Create a <span class="inline-code">&lt;header&gt;</span> with:
+            <ul>
+              <li>A logo/site name on the left</li>
+              <li>Navigation links on the right</li>
+            </ul>
+          </li>
+          <li>Style it with <span class="inline-code">position: fixed</span> at the top</li>
+          <li>Set <span class="inline-code">left: 0; right: 0;</span> to stretch full width</li>
+          <li>Add a background color and subtle border-bottom</li>
+          <li>Set <span class="inline-code">z-index: 100</span> to stay above content</li>
+          <li>Add <span class="inline-code">padding-top</span> to your body equal to the header height</li>
+          <li>Make nav links <span class="inline-code">display: inline-block</span> with padding</li>
+        </ol>
+      </div>
+
+      <h2>Key Takeaways</h2>
+      <ul style="margin-left: 20px; color: var(--text-secondary);">
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">display: block</strong> — full width, new line</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">display: inline</strong> — flows with text, can't set width/height</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">display: inline-block</strong> — best of both</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">position: fixed</strong> — stays in viewport (great for headers)</li>
+        <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">position: absolute</strong> — needs a positioned parent</li>
+      </ul>
+
+      <p style="margin-top: 32px;">Tomorrow, we'll put everything together in the Week 1 Quiz & Project! You'll build a complete landing page from scratch using all the HTML and CSS you've learned.</p>
+    </div>
+
+    <nav class="lesson-nav">
+      <a href="css-box-model.html" class="nav-btn">
+        <span>&larr;</span>
+        <div>
+          <div class="nav-btn-label">Previous</div>
+          <div class="nav-btn-title">CSS Box Model</div>
+        </div>
+      </a>
+      <a href="week1-quiz.html" class="nav-btn primary">
+        <div>
+          <div class="nav-btn-label">Next</div>
+          <div class="nav-btn-title">Week 1 Quiz & Project</div>
+        </div>
+        <span>&rarr;</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>

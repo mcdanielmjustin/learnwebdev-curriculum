@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 1: Quiz & Final Project | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #09090b; --bg-secondary: #0f0f11; --bg-card: #1c1c1f; --bg-code: #0d1117;
+      --text-primary: #fafafa; --text-secondary: #a1a1aa; --text-muted: #71717a;
+      --accent: #3b82f6; --accent-green: #22c55e; --accent-purple: #a855f7; --accent-orange: #f59e0b;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+    .lesson-container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .lesson-header { margin-bottom: 48px; }
+    .lesson-week { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(239, 68, 68, 0.15); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: #ef4444; margin-bottom: 16px; }
+    .lesson-title { font-family: var(--font-display); font-size: 2.5rem; line-height: 1.2; margin-bottom: 16px; }
+    .lesson-meta { display: flex; gap: 24px; color: var(--text-secondary); font-size: 0.9rem; }
+    .lesson-content h2 { font-family: var(--font-display); font-size: 1.75rem; margin: 48px 0 20px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .lesson-content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .lesson-content h3 { font-size: 1.25rem; margin: 32px 0 16px; }
+    .lesson-content p { color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content strong { color: var(--text-primary); }
+    .lesson-content ul, .lesson-content ol { margin-left: 20px; color: var(--text-secondary); margin-bottom: 20px; }
+    .lesson-content li { margin: 8px 0; }
+    .inline-code { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.9em; color: var(--accent-purple); font-family: var(--font-mono); }
+
+    /* Quiz Section */
+    .quiz-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 32px 0; }
+    .quiz-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+    .quiz-title span { font-size: 1.5rem; }
+    .question { margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .question:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .question-num { font-size: 0.8rem; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+    .question-text { font-size: 1.1rem; margin-bottom: 16px; color: var(--text-primary); }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+    .option:hover { border-color: var(--accent); background: rgba(59, 130, 246, 0.05); }
+    .option.selected { border-color: var(--accent); background: rgba(59, 130, 246, 0.1); }
+    .option.correct { border-color: var(--accent-green); background: rgba(34, 197, 94, 0.1); }
+    .option.incorrect { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+    .option-radio { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .option.selected .option-radio { border-color: var(--accent); background: var(--accent); }
+    .option.correct .option-radio { border-color: var(--accent-green); background: var(--accent-green); }
+    .option.incorrect .option-radio { border-color: #ef4444; background: #ef4444; }
+    .option-text { flex: 1; }
+    .check-btn { padding: 14px 28px; background: var(--accent); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 24px; transition: all 0.2s; }
+    .check-btn:hover { background: #2563eb; }
+    .quiz-result { margin-top: 24px; padding: 20px; border-radius: 12px; font-weight: 500; display: none; }
+    .quiz-result.show { display: block; }
+    .quiz-result.pass { background: rgba(34, 197, 94, 0.15); color: var(--accent-green); }
+    .quiz-result.fail { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+    /* Project Section */
+    .project-section { background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)); border: 2px solid rgba(168, 85, 247, 0.3); border-radius: 16px; padding: 32px; margin: 32px 0; }
+    .project-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+    .project-desc { color: var(--text-secondary); margin-bottom: 24px; }
+    .project-requirements { background: var(--bg-secondary); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+    .project-requirements h4 { margin-bottom: 16px; color: var(--text-primary); }
+    .checklist { list-style: none; margin: 0; }
+    .checklist li { padding: 10px 0; padding-left: 32px; position: relative; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before { content: '☐'; position: absolute; left: 0; color: var(--text-muted); font-size: 1.1rem; }
+    .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 24px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+    .code-filename { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+    pre { padding: 20px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6; }
+
+    .lesson-nav { display: flex; justify-content: space-between; margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .nav-btn { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--bg-secondary); border-color: var(--accent); }
+    .nav-btn-label { font-size: 0.8rem; color: var(--text-muted); }
+    .nav-btn-title { font-weight: 500; }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="breadcrumb">
+      <a href="/pages/dashboard.html">Dashboard</a> &rsaquo; Week 1 &rsaquo; Quiz & Project
+    </div>
+
+    <header class="lesson-header">
+      <div class="lesson-week">Week 1 Complete &bull; Quiz Time!</div>
+      <h1 class="lesson-title">Week 1: Quiz & Final Project</h1>
+      <div class="lesson-meta">
+        <span>60 min</span>
+        <span>Lesson 7 of 28</span>
+      </div>
+    </header>
+
+    <div class="lesson-content">
+      <h2>Part 1: Knowledge Check</h2>
+      <p>Test your understanding of HTML and CSS fundamentals. Answer all questions, then click "Check Answers" to see your score.</p>
+
+      <div class="quiz-section">
+        <div class="quiz-title"><span>📝</span> HTML & CSS Quiz</div>
+
+        <div class="question" data-correct="c">
+          <div class="question-num">Question 1 of 10</div>
+          <div class="question-text">Which tag is used to create the largest heading?</div>
+          <div class="options">
+            <div class="option" data-value="a"><div class="option-radio"></div><span class="option-text">&lt;heading&gt;</span></div>
+            <div class="option" data-value="b"><div class="option-radio"></div><span class="option-text">&lt;h6&gt;</span></div>
+            <div class="option" data-value="c"><div class="option-radio"></div><span class="option-text">&lt;h1&gt;</span></div>
+            <div class="option" data-value="d"><div class="option-radio"></div><span class="option-text">&lt;head&gt;</span></div>
+          </div>
+        </div>
+
+        <div class="question" data-correct="b">
+          <div class="question-num">Question 2 of 10</div>
+          <div class="question-text">What does CSS stand for?</div>
+          <div class="options">
+            <div class="option" data-value="a"><div class="option-radio"></div><span class="option-text">Computer Style Sheets</span></div>
+            <div class="option" data-value="b"><div class="option-radio"></div><span class="option-text">Cascading Style Sheets</span></div>
+            <div class="option" data-value="c"><div class="option-radio"></div><span class="option-text">Creative Style System</span></div>
+            <div class="option" data-value="d"><div class="option-radio"></div><span class="option-text">Colorful Style Sheets</span></div>
+          </div>
+        </div>
+
+        <div class="question" data-correct="a">
+          <div class="question-num">Question 3 of 10</div>
+          <div class="question-text">Which CSS property adds space INSIDE an element (between content and border)?</div>
+          <div class="options">
+            <div class="option" data-value="a"><div class="option-radio"></div><span class="option-text">padding</span></div>
+            <div class="option" data-value="b"><div class="option-radio"></div><span class="option-text">margin</span></div>
+            <div class="option" data-value="c"><div class="option-radio"></div><span class="option-text">spacing</span></div>
+            <div class="option" data-value="d"><div class="option-radio"></div><span class="option-text">border-space</span></div>
+          </div>
+        </div>
+
+        <div class="question" data-correct="d">
+          <div class="question-num">Question 4 of 10</div>
+          <div class="question-text">How do you select an element with class="highlight" in CSS?</div>
+          <div class="options">
+            <div class="option" data-value="a"><div class="option-radio"></div><span class="option-text">highlight { }</span></div>
+            <div class="option" data-value="b"><div class="option-radio"></div><span class="option-text">#highlight { }</span></div>
+            <div class="option" data-value="c"><div class="option-radio"></div><span class="option-text">*highlight { }</span></div>
+            <div class="option" data-value="d"><div class="option-radio"></div><span class="option-text">.highlight { }</span></div>
+          </div>
+        </div>
+
+        <div class="question" data-correct="c">
+          <div class="question-num">Question 5 of 10</div>
+          <div class="question-text">Which attribute is REQUIRED on every &lt;img&gt; tag for accessibility?</div>
+          <div class="options">
+            <div class="option" data-value="a"><div class="option-radio"></div><span class="option-text">title</span></div>
+            <div class="option" data-value="b"><div class="option-radio"></div><span class="option-text">name</span></div>
+            <div class="option" data-value="c"><div class="option-radio"></div><span class="option-text">alt</span></div>
+            <div class="option" data-value="d"><div class="option-radio"></div><span class="option-text">description</span></div>
+          </div>
+        </div>
+
+        <div class="question" data-correct="b">
+          <div class="question-num">Question 6 of 10</div>
+          <div class="question-text">Which display value allows setting width/height while staying inline?</div>
+          <div class="options">
+            <div class="option" data-value="a"><div class="option-radio"></div><span class="option-text">display: inline</span></div>
+            <div class="option" data-value="b"><div class="option-radio"></div><span class="option-text">display: inline-block</span></div>
+            <div class="option" data-value="c"><div class="option-radio"></div><span class="option-text">display: block</span></div>
+            <div class="option" data-value="d"><div class="option-radio"></div><span class="option-text">display: flex</span></div>
+          </div>
+        </div>
+
+        <div class="question" data-correct="a">
+          <div class="question-num">Question 7 of 10</div>
+          <div class="question-text">Which position value creates a fixed header that stays at the top when scrolling?</div>
+          <div class="options">
+            <div class="option" data-value="a"><div class="option-radio"></div><span class="option-text">position: fixed</span></div>
+            <div class="option" data-value="b"><div class="option-radio"></div><span class="option-text">position: absolute</span></div>
+            <div class="option" data-value="c"><div class="option-radio"></div><span class="option-text">position: relative</span></div>
+            <div class="option" data-value="d"><div class="option-radio"></div><span class="option-text">position: static</span></div>
+          </div>
+        </div>
+
+        <div class="question" data-correct="d">
+          <div class="question-num">Question 8 of 10</div>
+          <div class="question-text">What CSS property should you set to make width include padding and border?</div>
+          <div class="options">
+            <div class="option" data-value="a"><div class="option-radio"></div><span class="option-text">width-include: all</span></div>
+            <div class="option" data-value="b"><div class="option-radio"></div><span class="option-text">box-model: border</span></div>
+            <div class="option" data-value="c"><div class="option-radio"></div><span class="option-text">size-mode: complete</span></div>
+            <div class="option" data-value="d"><div class="option-radio"></div><span class="option-text">box-sizing: border-box</span></div>
+          </div>
+        </div>
+
+        <div class="question" data-correct="c">
+          <div class="question-num">Question 9 of 10</div>
+          <div class="question-text">Which semantic HTML tag should contain the main navigation links?</div>
+          <div class="options">
+            <div class="option" data-value="a"><div class="option-radio"></div><span class="option-text">&lt;navigation&gt;</span></div>
+            <div class="option" data-value="b"><div class="option-radio"></div><span class="option-text">&lt;menu&gt;</span></div>
+            <div class="option" data-value="c"><div class="option-radio"></div><span class="option-text">&lt;nav&gt;</span></div>
+            <div class="option" data-value="d"><div class="option-radio"></div><span class="option-text">&lt;links&gt;</span></div>
+          </div>
+        </div>
+
+        <div class="question" data-correct="b">
+          <div class="question-num">Question 10 of 10</div>
+          <div class="question-text">What is the correct CSS shorthand for: 10px top, 20px right, 10px bottom, 20px left?</div>
+          <div class="options">
+            <div class="option" data-value="a"><div class="option-radio"></div><span class="option-text">padding: 10px 10px 20px 20px</span></div>
+            <div class="option" data-value="b"><div class="option-radio"></div><span class="option-text">padding: 10px 20px</span></div>
+            <div class="option" data-value="c"><div class="option-radio"></div><span class="option-text">padding: 20px 10px</span></div>
+            <div class="option" data-value="d"><div class="option-radio"></div><span class="option-text">padding: 10px 20px 10px</span></div>
+          </div>
+        </div>
+
+        <button class="check-btn" onclick="checkAnswers()">Check Answers</button>
+        <div class="quiz-result" id="quizResult"></div>
+      </div>
+
+      <h2>Part 2: Final Project</h2>
+
+      <div class="project-section">
+        <div class="project-title">🚀 Build a Landing Page from Scratch</div>
+        <p class="project-desc">Put everything together! Build a complete landing page using only HTML and CSS. This is your chance to apply all the concepts from Week 1.</p>
+
+        <div class="project-requirements">
+          <h4>Requirements Checklist</h4>
+          <ul class="checklist">
+            <li>Proper HTML5 document structure (DOCTYPE, html, head, body)</li>
+            <li>Semantic HTML tags (header, nav, main, section, footer)</li>
+            <li>A fixed navigation header with logo and links</li>
+            <li>A hero section with heading, paragraph, and button</li>
+            <li>At least one image with proper alt text</li>
+            <li>A features or cards section (3+ items)</li>
+            <li>External CSS file (styles.css) linked properly</li>
+            <li>box-sizing: border-box applied globally</li>
+            <li>Consistent spacing using padding and margin</li>
+            <li>At least 2 hover effects (links, buttons)</li>
+          </ul>
+        </div>
+
+        <h3>Starter Template</h3>
+        <p>Start with this HTML structure and build from there:</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-filename">index.html</span>
+          </div>
+          <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;My Landing Page&lt;/title&gt;
+  &lt;link rel="stylesheet" href="styles.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;nav&gt;
+      &lt;div class="logo"&gt;MyBrand&lt;/div&gt;
+      &lt;div class="nav-links"&gt;
+        &lt;a href="#features"&gt;Features&lt;/a&gt;
+        &lt;a href="#about"&gt;About&lt;/a&gt;
+        &lt;a href="#contact"&gt;Contact&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;section class="hero"&gt;
+      &lt;h1&gt;Welcome to MyBrand&lt;/h1&gt;
+      &lt;p&gt;Your tagline goes here. Make it compelling!&lt;/p&gt;
+      &lt;a href="#" class="btn"&gt;Get Started&lt;/a&gt;
+    &lt;/section&gt;
+
+    &lt;section id="features" class="features"&gt;
+      &lt;h2&gt;Features&lt;/h2&gt;
+      &lt;div class="cards"&gt;
+        &lt;!-- Add your feature cards here --&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 MyBrand. All rights reserved.&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+        </div>
+
+        <h3>Tips for Success</h3>
+        <ul>
+          <li><strong>Start with structure:</strong> Get all your HTML in place before styling</li>
+          <li><strong>Work section by section:</strong> Style the header, then hero, then features</li>
+          <li><strong>Use your browser's DevTools:</strong> Right-click → Inspect to debug</li>
+          <li><strong>Reference the PassEPPP site:</strong> Look at how it's structured for inspiration</li>
+          <li><strong>Don't overthink it:</strong> Simple and clean beats complex and messy</li>
+        </ul>
+      </div>
+
+      <p style="margin-top: 32px; text-align: center; color: var(--text-secondary);">
+        <strong style="color: var(--text-primary);">Congratulations on completing Week 1!</strong><br>
+        Next week, you'll learn Flexbox, Grid, and start programming with JavaScript.
+      </p>
+    </div>
+
+    <nav class="lesson-nav">
+      <a href="css-layout-basics.html" class="nav-btn">
+        <span>&larr;</span>
+        <div>
+          <div class="nav-btn-label">Previous</div>
+          <div class="nav-btn-title">CSS Layout Basics</div>
+        </div>
+      </a>
+      <a href="/content/week2/css-flexbox.html" class="nav-btn primary">
+        <div>
+          <div class="nav-btn-label">Week 2</div>
+          <div class="nav-btn-title">Flexbox Layout</div>
+        </div>
+        <span>&rarr;</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    // Quiz functionality
+    document.querySelectorAll('.option').forEach(option => {
+      option.addEventListener('click', function() {
+        const question = this.closest('.question');
+        question.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+
+    function checkAnswers() {
+      let correct = 0;
+      let total = document.querySelectorAll('.question').length;
+
+      document.querySelectorAll('.question').forEach(question => {
+        const correctAnswer = question.dataset.correct;
+        const selected = question.querySelector('.option.selected');
+
+        question.querySelectorAll('.option').forEach(o => {
+          o.classList.remove('correct', 'incorrect');
+        });
+
+        if (selected) {
+          const selectedValue = selected.dataset.value;
+          if (selectedValue === correctAnswer) {
+            selected.classList.add('correct');
+            correct++;
+          } else {
+            selected.classList.add('incorrect');
+            question.querySelector(`[data-value="${correctAnswer}"]`).classList.add('correct');
+          }
+        } else {
+          question.querySelector(`[data-value="${correctAnswer}"]`).classList.add('correct');
+        }
+      });
+
+      const result = document.getElementById('quizResult');
+      const percentage = Math.round((correct / total) * 100);
+      result.className = 'quiz-result show ' + (percentage >= 70 ? 'pass' : 'fail');
+      result.innerHTML = percentage >= 70
+        ? `🎉 Great job! You scored ${correct}/${total} (${percentage}%). You're ready for Week 2!`
+        : `You scored ${correct}/${total} (${percentage}%). Review the lessons and try again!`;
+    }
+  </script>
+</body>
+</html>
