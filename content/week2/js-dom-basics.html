@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 13: DOM Manipulation | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a24;
+      --text-primary: #f0f0f0;
+      --text-secondary: #a0a0b0;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.3);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+
+    .lesson-header {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem;
+    }
+    .lesson-nav {
+      max-width: 1000px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .back-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .lesson-badge {
+      background: var(--accent);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .lesson-title-area { max-width: 1000px; margin: 0 auto; }
+    .lesson-title-area h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .lesson-meta { color: var(--text-secondary); display: flex; gap: 1.5rem; flex-wrap: wrap; }
+
+    .lesson-content { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem; }
+
+    .content-section { margin-bottom: 3rem; }
+    .content-section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    .content-section h3 {
+      font-size: 1.25rem;
+      margin: 1.5rem 0 0.75rem;
+      color: var(--text-primary);
+    }
+    .content-section p { color: var(--text-secondary); margin-bottom: 1rem; }
+
+    .code-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .code-header {
+      background: var(--bg-secondary);
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .code-content {
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .code-content code { color: var(--text-primary); }
+
+    .keyword { color: #c792ea; }
+    .string { color: #c3e88d; }
+    .number { color: #f78c6c; }
+    .comment { color: #676e95; font-style: italic; }
+    .function { color: #82aaff; }
+    .variable { color: #f07178; }
+    .operator { color: #89ddff; }
+    .console { color: #ffcb6b; }
+    .tag { color: #f07178; }
+    .attr { color: #ffcb6b; }
+
+    .callout {
+      padding: 1.25rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+    }
+    .callout-info {
+      background: rgba(99, 102, 241, 0.1);
+      border-left: 4px solid var(--accent);
+    }
+    .callout-success {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid var(--success);
+    }
+    .callout-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 4px solid var(--warning);
+    }
+    .callout-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .demo-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .demo-box h4 {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .live-demo {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .live-demo-result {
+      background: white;
+      color: #333;
+      border-radius: 6px;
+      padding: 1rem;
+      min-height: 60px;
+    }
+    .demo-buttons {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .demo-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .demo-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .demo-btn.secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    .method-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+    .method-table th,
+    .method-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .method-table th {
+      background: var(--bg-secondary);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .method-table td { color: var(--text-secondary); }
+    .method-table code {
+      background: var(--bg-card);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+    }
+
+    .practice-exercise {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(16, 185, 129, 0.1));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .practice-exercise h3 {
+      color: var(--success);
+      margin-bottom: 1rem;
+    }
+
+    .lesson-navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+    .nav-btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .lesson-title-area h1 { font-size: 1.75rem; }
+      .lesson-content { padding: 2rem 1rem; }
+      .lesson-navigation { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="lesson-header">
+    <nav class="lesson-nav">
+      <a href="../../index.html" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Dashboard
+      </a>
+      <span class="lesson-badge">Week 2 • Lesson 13</span>
+    </nav>
+    <div class="lesson-title-area">
+      <h1>🎯 DOM Manipulation Basics</h1>
+      <div class="lesson-meta">
+        <span>📚 Selecting & Modifying Elements</span>
+        <span>⏱️ 45 minutes</span>
+        <span>🎯 Essential</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="lesson-content">
+    <section class="content-section">
+      <h2>What is the DOM?</h2>
+      <p>The <strong>Document Object Model (DOM)</strong> is how JavaScript sees your HTML page. It's a tree-like structure where each HTML element becomes an object that JavaScript can access, modify, add, or delete.</p>
+
+      <div class="callout callout-info">
+        <div class="callout-title">💡 Think of it Like This</div>
+        <p>If HTML is the blueprint of a house, the DOM is the actual house after it's built. JavaScript is like a contractor who can walk through the house, repaint walls (change content), add furniture (add elements), or remodel rooms (modify structure).</p>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>HTML → DOM Tree</span>
+        </div>
+        <div class="code-content">
+<code><span class="comment">&lt;!-- This HTML... --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"card"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;h2&gt;</span>Welcome<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Hello, World!<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="comment">/* ...becomes this DOM tree:
+   document
+   └── html
+       └── body
+           └── div.card
+               ├── h2 → "Welcome"
+               └── p → "Hello, World!"
+*/</span></code>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Selecting Elements</h2>
+      <p>Before you can change something on the page, you need to select it. Here are the main methods:</p>
+
+      <table class="method-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Returns</th>
+            <th>Use When</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>getElementById()</code></td>
+            <td>Single element or null</td>
+            <td>You have a unique ID</td>
+          </tr>
+          <tr>
+            <td><code>querySelector()</code></td>
+            <td>First matching element</td>
+            <td>You want any CSS selector (recommended!)</td>
+          </tr>
+          <tr>
+            <td><code>querySelectorAll()</code></td>
+            <td>NodeList (array-like)</td>
+            <td>You need ALL matching elements</td>
+          </tr>
+          <tr>
+            <td><code>getElementsByClassName()</code></td>
+            <td>HTMLCollection</td>
+            <td>Legacy - prefer querySelector</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript - Selecting Elements</span>
+        </div>
+        <div class="code-content">
+<code><span class="comment">// Given this HTML:</span>
+<span class="comment">// &lt;h1 id="title"&gt;Welcome&lt;/h1&gt;</span>
+<span class="comment">// &lt;p class="intro"&gt;First paragraph&lt;/p&gt;</span>
+<span class="comment">// &lt;p class="intro"&gt;Second paragraph&lt;/p&gt;</span>
+<span class="comment">// &lt;button class="btn primary"&gt;Click Me&lt;/button&gt;</span>
+
+<span class="comment">// getElementById - select by ID (most specific)</span>
+<span class="keyword">const</span> <span class="variable">title</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">getElementById</span>(<span class="string">'title'</span>);
+
+<span class="comment">// querySelector - select FIRST match using CSS selector</span>
+<span class="keyword">const</span> <span class="variable">firstIntro</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'.intro'</span>);
+<span class="keyword">const</span> <span class="variable">button</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'.btn.primary'</span>);
+<span class="keyword">const</span> <span class="variable">heading</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'h1'</span>);
+
+<span class="comment">// querySelectorAll - select ALL matches</span>
+<span class="keyword">const</span> <span class="variable">allIntros</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelectorAll</span>(<span class="string">'.intro'</span>);
+<span class="console">console</span>.<span class="function">log</span>(<span class="variable">allIntros</span>.<span class="variable">length</span>);  <span class="comment">// 2</span>
+
+<span class="comment">// Complex selectors work too!</span>
+<span class="keyword">const</span> <span class="variable">navLinks</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelectorAll</span>(<span class="string">'nav a'</span>);
+<span class="keyword">const</span> <span class="variable">firstCard</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'.card:first-child'</span>);</code>
+        </div>
+      </div>
+
+      <div class="callout callout-success">
+        <div class="callout-title">✅ Prefer querySelector</div>
+        <p>Use <code>querySelector</code> and <code>querySelectorAll</code> for most selections. They accept any CSS selector, making them extremely flexible.</p>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Changing Content</h2>
+      <p>Once you have an element, you can change its content:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript</span>
+        </div>
+        <div class="code-content">
+<code><span class="keyword">const</span> <span class="variable">heading</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'h1'</span>);
+
+<span class="comment">// textContent - for plain text (safe, recommended)</span>
+<span class="variable">heading</span>.<span class="variable">textContent</span> <span class="operator">=</span> <span class="string">'New Title'</span>;
+
+<span class="comment">// innerHTML - for HTML content (be careful with user input!)</span>
+<span class="variable">heading</span>.<span class="variable">innerHTML</span> <span class="operator">=</span> <span class="string">'Welcome &lt;span&gt;User&lt;/span&gt;'</span>;
+
+<span class="comment">// Reading content</span>
+<span class="console">console</span>.<span class="function">log</span>(<span class="variable">heading</span>.<span class="variable">textContent</span>);  <span class="comment">// "Welcome User"</span>
+
+<span class="comment">// Practical example: Update score display</span>
+<span class="keyword">const</span> <span class="variable">scoreDisplay</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'#score'</span>);
+<span class="keyword">let</span> <span class="variable">score</span> <span class="operator">=</span> <span class="number">0</span>;
+
+<span class="keyword">function</span> <span class="function">updateScore</span>(<span class="variable">points</span>) {
+  <span class="variable">score</span> <span class="operator">+=</span> <span class="variable">points</span>;
+  <span class="variable">scoreDisplay</span>.<span class="variable">textContent</span> <span class="operator">=</span> <span class="string">`Score: ${score}`</span>;
+}</code>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h4>Live Demo - Changing Content</h4>
+        <div class="live-demo">
+          <div class="live-demo-result">
+            <h3 id="demo-heading" style="margin: 0; color: #333;">Click a button below!</h3>
+          </div>
+        </div>
+        <div class="demo-buttons">
+          <button class="demo-btn" onclick="changeText()">Change Text</button>
+          <button class="demo-btn" onclick="changeHTML()">Change HTML</button>
+          <button class="demo-btn secondary" onclick="resetDemo1()">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Changing Styles</h2>
+      <p>You can modify CSS directly or work with classes:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript - Inline Styles</span>
+        </div>
+        <div class="code-content">
+<code><span class="keyword">const</span> <span class="variable">box</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'.box'</span>);
+
+<span class="comment">// Set individual style properties</span>
+<span class="variable">box</span>.<span class="variable">style</span>.<span class="variable">backgroundColor</span> <span class="operator">=</span> <span class="string">'#6366f1'</span>;
+<span class="variable">box</span>.<span class="variable">style</span>.<span class="variable">color</span> <span class="operator">=</span> <span class="string">'white'</span>;
+<span class="variable">box</span>.<span class="variable">style</span>.<span class="variable">padding</span> <span class="operator">=</span> <span class="string">'20px'</span>;
+<span class="variable">box</span>.<span class="variable">style</span>.<span class="variable">borderRadius</span> <span class="operator">=</span> <span class="string">'8px'</span>;
+
+<span class="comment">// Note: CSS properties become camelCase in JS</span>
+<span class="comment">// background-color → backgroundColor</span>
+<span class="comment">// font-size → fontSize</span>
+<span class="comment">// border-radius → borderRadius</span></code>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript - Working with Classes (Better!)</span>
+        </div>
+        <div class="code-content">
+<code><span class="keyword">const</span> <span class="variable">button</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'.btn'</span>);
+
+<span class="comment">// classList methods</span>
+<span class="variable">button</span>.<span class="variable">classList</span>.<span class="function">add</span>(<span class="string">'active'</span>);       <span class="comment">// Add a class</span>
+<span class="variable">button</span>.<span class="variable">classList</span>.<span class="function">remove</span>(<span class="string">'active'</span>);    <span class="comment">// Remove a class</span>
+<span class="variable">button</span>.<span class="variable">classList</span>.<span class="function">toggle</span>(<span class="string">'active'</span>);    <span class="comment">// Toggle on/off</span>
+<span class="variable">button</span>.<span class="variable">classList</span>.<span class="function">contains</span>(<span class="string">'active'</span>); <span class="comment">// Returns true/false</span>
+
+<span class="comment">// Add multiple classes</span>
+<span class="variable">button</span>.<span class="variable">classList</span>.<span class="function">add</span>(<span class="string">'active'</span>, <span class="string">'highlighted'</span>);
+
+<span class="comment">// Practical: Toggle dark mode</span>
+<span class="keyword">function</span> <span class="function">toggleDarkMode</span>() {
+  <span class="variable">document</span>.<span class="variable">body</span>.<span class="variable">classList</span>.<span class="function">toggle</span>(<span class="string">'dark-mode'</span>);
+}</code>
+        </div>
+      </div>
+
+      <div class="callout callout-success">
+        <div class="callout-title">✅ Prefer Classes Over Inline Styles</div>
+        <p>Using <code>classList</code> keeps your styling in CSS where it belongs. This makes code more maintainable and enables CSS transitions/animations.</p>
+      </div>
+
+      <div class="demo-box">
+        <h4>Live Demo - Changing Styles</h4>
+        <div class="live-demo">
+          <div class="live-demo-result" id="style-demo">
+            <div id="style-box" style="padding: 1rem; text-align: center; transition: all 0.3s ease;">
+              Click buttons to change my styles!
+            </div>
+          </div>
+        </div>
+        <div class="demo-buttons">
+          <button class="demo-btn" onclick="changeColor()">Change Color</button>
+          <button class="demo-btn" onclick="toggleHighlight()">Toggle Highlight</button>
+          <button class="demo-btn secondary" onclick="resetDemo2()">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Changing Attributes</h2>
+      <p>Modify HTML attributes like src, href, disabled, etc:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript</span>
+        </div>
+        <div class="code-content">
+<code><span class="keyword">const</span> <span class="variable">link</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'a'</span>);
+<span class="keyword">const</span> <span class="variable">image</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'img'</span>);
+<span class="keyword">const</span> <span class="variable">input</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'input'</span>);
+
+<span class="comment">// Get attribute value</span>
+<span class="keyword">const</span> <span class="variable">currentHref</span> <span class="operator">=</span> <span class="variable">link</span>.<span class="function">getAttribute</span>(<span class="string">'href'</span>);
+
+<span class="comment">// Set attribute value</span>
+<span class="variable">link</span>.<span class="function">setAttribute</span>(<span class="string">'href'</span>, <span class="string">'https://example.com'</span>);
+<span class="variable">link</span>.<span class="function">setAttribute</span>(<span class="string">'target'</span>, <span class="string">'_blank'</span>);
+
+<span class="comment">// Common shortcuts for standard attributes</span>
+<span class="variable">image</span>.<span class="variable">src</span> <span class="operator">=</span> <span class="string">'new-image.jpg'</span>;
+<span class="variable">image</span>.<span class="variable">alt</span> <span class="operator">=</span> <span class="string">'New description'</span>;
+<span class="variable">link</span>.<span class="variable">href</span> <span class="operator">=</span> <span class="string">'https://example.com'</span>;
+
+<span class="comment">// Boolean attributes (disabled, checked, required)</span>
+<span class="variable">input</span>.<span class="variable">disabled</span> <span class="operator">=</span> <span class="number">true</span>;   <span class="comment">// Disable input</span>
+<span class="variable">input</span>.<span class="variable">disabled</span> <span class="operator">=</span> <span class="number">false</span>;  <span class="comment">// Enable input</span>
+
+<span class="comment">// Remove attribute</span>
+<span class="variable">link</span>.<span class="function">removeAttribute</span>(<span class="string">'target'</span>);
+
+<span class="comment">// Data attributes (data-*)</span>
+<span class="comment">// &lt;div data-question-id="42" data-category="ethics"&gt;</span>
+<span class="keyword">const</span> <span class="variable">card</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'[data-question-id]'</span>);
+<span class="keyword">const</span> <span class="variable">id</span> <span class="operator">=</span> <span class="variable">card</span>.<span class="variable">dataset</span>.<span class="variable">questionId</span>;    <span class="comment">// "42"</span>
+<span class="keyword">const</span> <span class="variable">category</span> <span class="operator">=</span> <span class="variable">card</span>.<span class="variable">dataset</span>.<span class="variable">category</span>; <span class="comment">// "ethics"</span></code>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Creating & Removing Elements</h2>
+      <p>Add new elements to the page or remove existing ones:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript - Creating Elements</span>
+        </div>
+        <div class="code-content">
+<code><span class="comment">// Create a new element</span>
+<span class="keyword">const</span> <span class="variable">newCard</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">createElement</span>(<span class="string">'div'</span>);
+
+<span class="comment">// Set its properties</span>
+<span class="variable">newCard</span>.<span class="variable">className</span> <span class="operator">=</span> <span class="string">'card'</span>;
+<span class="variable">newCard</span>.<span class="variable">innerHTML</span> <span class="operator">=</span> <span class="string">`
+  &lt;h3&gt;New Question&lt;/h3&gt;
+  &lt;p&gt;This card was created with JavaScript!&lt;/p&gt;
+`</span>;
+
+<span class="comment">// Add it to the page</span>
+<span class="keyword">const</span> <span class="variable">container</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'.container'</span>);
+<span class="variable">container</span>.<span class="function">appendChild</span>(<span class="variable">newCard</span>);      <span class="comment">// Add at the end</span>
+<span class="variable">container</span>.<span class="function">prepend</span>(<span class="variable">newCard</span>);         <span class="comment">// Add at the beginning</span>
+
+<span class="comment">// Insert before a specific element</span>
+<span class="keyword">const</span> <span class="variable">existingCard</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'.card'</span>);
+<span class="variable">container</span>.<span class="function">insertBefore</span>(<span class="variable">newCard</span>, <span class="variable">existingCard</span>);</code>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript - Removing Elements</span>
+        </div>
+        <div class="code-content">
+<code><span class="comment">// Remove an element</span>
+<span class="keyword">const</span> <span class="variable">card</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'.card'</span>);
+<span class="variable">card</span>.<span class="function">remove</span>();
+
+<span class="comment">// Clear all children</span>
+<span class="keyword">const</span> <span class="variable">container</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'.container'</span>);
+<span class="variable">container</span>.<span class="variable">innerHTML</span> <span class="operator">=</span> <span class="string">''</span>;  <span class="comment">// Removes all content</span></code>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <h4>Live Demo - Creating & Removing</h4>
+        <div class="live-demo">
+          <div class="live-demo-result" id="create-demo" style="min-height: 100px;">
+            <div class="demo-item" style="padding: 0.5rem; margin: 0.25rem 0; background: #e0e0e0; border-radius: 4px;">Item 1</div>
+            <div class="demo-item" style="padding: 0.5rem; margin: 0.25rem 0; background: #e0e0e0; border-radius: 4px;">Item 2</div>
+          </div>
+        </div>
+        <div class="demo-buttons">
+          <button class="demo-btn" onclick="addItem()">Add Item</button>
+          <button class="demo-btn" onclick="removeItem()">Remove Last</button>
+          <button class="demo-btn secondary" onclick="clearAll()">Clear All</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Practical Example: Building a Simple Quiz Display</h2>
+      <div class="code-block">
+        <div class="code-header">
+          <span>HTML</span>
+        </div>
+        <div class="code-content">
+<code><span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="string">"quiz-container"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;h2</span> <span class="attr">id</span>=<span class="string">"question-text"</span><span class="tag">&gt;</span>Loading...<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="string">"options"</span><span class="tag">&gt;&lt;/div&gt;</span>
+  <span class="tag">&lt;p</span> <span class="attr">id</span>=<span class="string">"feedback"</span><span class="tag">&gt;&lt;/p&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Score: <span class="tag">&lt;span</span> <span class="attr">id</span>=<span class="string">"score"</span><span class="tag">&gt;</span>0<span class="tag">&lt;/span&gt;&lt;/p&gt;</span>
+<span class="tag">&lt;/div&gt;</span></code>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript</span>
+        </div>
+        <div class="code-content">
+<code><span class="comment">// Quiz data</span>
+<span class="keyword">const</span> <span class="variable">question</span> <span class="operator">=</span> {
+  <span class="variable">text</span>: <span class="string">'What is the primary purpose of informed consent?'</span>,
+  <span class="variable">options</span>: [
+    <span class="string">'To protect the therapist legally'</span>,
+    <span class="string">'To ensure client autonomy and understanding'</span>,
+    <span class="string">'To increase billing rates'</span>,
+    <span class="string">'To document sessions'</span>
+  ],
+  <span class="variable">correct</span>: <span class="number">1</span>
+};
+
+<span class="keyword">let</span> <span class="variable">score</span> <span class="operator">=</span> <span class="number">0</span>;
+
+<span class="comment">// Get DOM elements</span>
+<span class="keyword">const</span> <span class="variable">questionText</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'#question-text'</span>);
+<span class="keyword">const</span> <span class="variable">optionsContainer</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'#options'</span>);
+<span class="keyword">const</span> <span class="variable">feedback</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'#feedback'</span>);
+<span class="keyword">const</span> <span class="variable">scoreDisplay</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">querySelector</span>(<span class="string">'#score'</span>);
+
+<span class="comment">// Display the question</span>
+<span class="keyword">function</span> <span class="function">displayQuestion</span>() {
+  <span class="variable">questionText</span>.<span class="variable">textContent</span> <span class="operator">=</span> <span class="variable">question</span>.<span class="variable">text</span>;
+  <span class="variable">optionsContainer</span>.<span class="variable">innerHTML</span> <span class="operator">=</span> <span class="string">''</span>;  <span class="comment">// Clear previous</span>
+
+  <span class="variable">question</span>.<span class="variable">options</span>.<span class="function">forEach</span>((<span class="variable">option</span>, <span class="variable">index</span>) <span class="operator">=></span> {
+    <span class="keyword">const</span> <span class="variable">button</span> <span class="operator">=</span> <span class="variable">document</span>.<span class="function">createElement</span>(<span class="string">'button'</span>);
+    <span class="variable">button</span>.<span class="variable">textContent</span> <span class="operator">=</span> <span class="variable">option</span>;
+    <span class="variable">button</span>.<span class="variable">className</span> <span class="operator">=</span> <span class="string">'option-btn'</span>;
+    <span class="variable">button</span>.<span class="variable">dataset</span>.<span class="variable">index</span> <span class="operator">=</span> <span class="variable">index</span>;
+    <span class="variable">button</span>.<span class="function">addEventListener</span>(<span class="string">'click'</span>, <span class="function">checkAnswer</span>);
+    <span class="variable">optionsContainer</span>.<span class="function">appendChild</span>(<span class="variable">button</span>);
+  });
+}
+
+<span class="comment">// Check the answer</span>
+<span class="keyword">function</span> <span class="function">checkAnswer</span>(<span class="variable">e</span>) {
+  <span class="keyword">const</span> <span class="variable">selected</span> <span class="operator">=</span> <span class="function">parseInt</span>(<span class="variable">e</span>.<span class="variable">target</span>.<span class="variable">dataset</span>.<span class="variable">index</span>);
+
+  <span class="keyword">if</span> (<span class="variable">selected</span> <span class="operator">===</span> <span class="variable">question</span>.<span class="variable">correct</span>) {
+    <span class="variable">score</span><span class="operator">++</span>;
+    <span class="variable">feedback</span>.<span class="variable">textContent</span> <span class="operator">=</span> <span class="string">'✓ Correct!'</span>;
+    <span class="variable">feedback</span>.<span class="variable">style</span>.<span class="variable">color</span> <span class="operator">=</span> <span class="string">'green'</span>;
+    <span class="variable">e</span>.<span class="variable">target</span>.<span class="variable">classList</span>.<span class="function">add</span>(<span class="string">'correct'</span>);
+  } <span class="keyword">else</span> {
+    <span class="variable">feedback</span>.<span class="variable">textContent</span> <span class="operator">=</span> <span class="string">'✗ Incorrect'</span>;
+    <span class="variable">feedback</span>.<span class="variable">style</span>.<span class="variable">color</span> <span class="operator">=</span> <span class="string">'red'</span>;
+    <span class="variable">e</span>.<span class="variable">target</span>.<span class="variable">classList</span>.<span class="function">add</span>(<span class="string">'incorrect'</span>);
+  }
+
+  <span class="variable">scoreDisplay</span>.<span class="variable">textContent</span> <span class="operator">=</span> <span class="variable">score</span>;
+}
+
+<span class="comment">// Start the quiz</span>
+<span class="function">displayQuestion</span>();</code>
+        </div>
+      </div>
+    </section>
+
+    <section class="practice-exercise">
+      <h3>🏋️ Practice Exercise</h3>
+      <p>Create an HTML page with JavaScript that:</p>
+      <ol style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 1rem;">
+        <li>Has a list of items and an "Add Item" button</li>
+        <li>When clicked, creates a new list item with a random number</li>
+        <li>Each item should have a "Delete" button that removes it</li>
+        <li>Displays a count of total items</li>
+      </ol>
+      <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Hint:</strong> Use <code>createElement</code>, <code>appendChild</code>, <code>remove()</code>, and <code>querySelectorAll().length</code></p>
+    </section>
+
+    <section class="content-section">
+      <h2>Key Takeaways</h2>
+      <div class="callout callout-success">
+        <ul style="color: var(--text-secondary); margin-left: 1rem;">
+          <li>The DOM is JavaScript's representation of your HTML page</li>
+          <li>Use <code>querySelector</code>/<code>querySelectorAll</code> to select elements</li>
+          <li>Change content with <code>textContent</code> (safe) or <code>innerHTML</code> (for HTML)</li>
+          <li>Prefer <code>classList</code> methods over inline styles</li>
+          <li>Create elements with <code>createElement</code>, add them with <code>appendChild</code></li>
+          <li>Remove elements with <code>element.remove()</code></li>
+        </ul>
+      </div>
+    </section>
+
+    <nav class="lesson-navigation">
+      <a href="js-functions.html" class="nav-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Previous: Functions
+      </a>
+      <a href="week2-quiz.html" class="nav-btn primary">
+        Next: Week 2 Quiz
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </nav>
+  </main>
+
+  <script>
+    // Demo 1: Changing Content
+    const demoHeading = document.getElementById('demo-heading');
+
+    function changeText() {
+      demoHeading.textContent = 'Text changed with textContent!';
+    }
+
+    function changeHTML() {
+      demoHeading.innerHTML = 'HTML with <strong style="color: #6366f1;">bold</strong> and <em>italic</em>!';
+    }
+
+    function resetDemo1() {
+      demoHeading.textContent = 'Click a button below!';
+    }
+
+    // Demo 2: Changing Styles
+    const styleBox = document.getElementById('style-box');
+    const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+    let colorIndex = 0;
+
+    function changeColor() {
+      colorIndex = (colorIndex + 1) % colors.length;
+      styleBox.style.backgroundColor = colors[colorIndex];
+      styleBox.style.color = 'white';
+    }
+
+    function toggleHighlight() {
+      styleBox.style.boxShadow = styleBox.style.boxShadow
+        ? ''
+        : '0 0 20px rgba(99, 102, 241, 0.6)';
+      styleBox.style.transform = styleBox.style.transform
+        ? ''
+        : 'scale(1.05)';
+    }
+
+    function resetDemo2() {
+      styleBox.style.backgroundColor = '';
+      styleBox.style.color = '';
+      styleBox.style.boxShadow = '';
+      styleBox.style.transform = '';
+    }
+
+    // Demo 3: Creating & Removing
+    const createDemo = document.getElementById('create-demo');
+    let itemCount = 2;
+
+    function addItem() {
+      itemCount++;
+      const newItem = document.createElement('div');
+      newItem.className = 'demo-item';
+      newItem.style.cssText = 'padding: 0.5rem; margin: 0.25rem 0; background: #e0e0e0; border-radius: 4px;';
+      newItem.textContent = `Item ${itemCount}`;
+      createDemo.appendChild(newItem);
+    }
+
+    function removeItem() {
+      const items = createDemo.querySelectorAll('.demo-item');
+      if (items.length > 0) {
+        items[items.length - 1].remove();
+      }
+    }
+
+    function clearAll() {
+      createDemo.innerHTML = '';
+      itemCount = 0;
+    }
+  </script>
+</body>
+</html>
