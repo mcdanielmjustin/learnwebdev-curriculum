@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 2 Quiz | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a24;
+      --text-primary: #f0f0f0;
+      --text-secondary: #a0a0b0;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.3);
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+
+    .quiz-header {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem;
+    }
+    .quiz-nav {
+      max-width: 800px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .back-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .quiz-badge {
+      background: var(--accent);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .quiz-title-area { max-width: 800px; margin: 0 auto; text-align: center; }
+    .quiz-title-area h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .quiz-meta { color: var(--text-secondary); }
+
+    .quiz-container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+
+    .progress-bar {
+      background: var(--bg-card);
+      border-radius: 10px;
+      height: 8px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, var(--accent), var(--success));
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .progress-text {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .question-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .question-number {
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .question-text {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+    .question-code {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+
+    .options-list { list-style: none; }
+    .option-item {
+      margin-bottom: 0.75rem;
+    }
+    .option-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-secondary);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .option-label:hover {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    .option-input {
+      display: none;
+    }
+    .option-input:checked + .option-label {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.15);
+    }
+    .option-marker {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--text-secondary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .option-input:checked + .option-label .option-marker {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    .option-text {
+      color: var(--text-secondary);
+      flex: 1;
+    }
+    .option-input:checked + .option-label .option-text {
+      color: var(--text-primary);
+    }
+
+    /* Correct/Incorrect states */
+    .option-label.correct {
+      border-color: var(--success) !important;
+      background: rgba(16, 185, 129, 0.15) !important;
+    }
+    .option-label.correct .option-marker {
+      background: var(--success);
+      border-color: var(--success);
+    }
+    .option-label.incorrect {
+      border-color: var(--error) !important;
+      background: rgba(239, 68, 68, 0.15) !important;
+    }
+    .option-label.incorrect .option-marker {
+      background: var(--error);
+      border-color: var(--error);
+    }
+
+    .explanation {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(99, 102, 241, 0.1);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      display: none;
+    }
+    .explanation.show { display: block; }
+    .explanation-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+    }
+    .explanation-text {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .quiz-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .quiz-btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quiz-btn.primary {
+      background: var(--accent);
+      color: white;
+    }
+    .quiz-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .quiz-btn.secondary {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    .quiz-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .results-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      text-align: center;
+      display: none;
+    }
+    .results-card.show { display: block; }
+    .results-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    .results-title {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .results-score {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 1rem 0;
+    }
+    .results-message {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    .results-breakdown {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .breakdown-item {
+      text-align: center;
+    }
+    .breakdown-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .breakdown-value.correct { color: var(--success); }
+    .breakdown-value.incorrect { color: var(--error); }
+    .breakdown-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+      transition: all 0.2s;
+    }
+    .nav-link:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+
+    .keyword { color: #c792ea; }
+    .string { color: #c3e88d; }
+    .number { color: #f78c6c; }
+    .comment { color: #676e95; }
+    .function { color: #82aaff; }
+    .variable { color: #f07178; }
+
+    @media (max-width: 768px) {
+      .quiz-title-area h1 { font-size: 1.75rem; }
+      .quiz-container { padding: 1rem; }
+      .question-card { padding: 1.5rem; }
+      .results-breakdown { flex-direction: column; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="quiz-header">
+    <nav class="quiz-nav">
+      <a href="../../index.html" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Dashboard
+      </a>
+      <span class="quiz-badge">Week 2 Quiz</span>
+    </nav>
+    <div class="quiz-title-area">
+      <h1>📝 Week 2 Assessment</h1>
+      <p class="quiz-meta">Advanced CSS & JavaScript Basics • 10 Questions</p>
+    </div>
+  </header>
+
+  <main class="quiz-container">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress"></div>
+    </div>
+    <p class="progress-text" id="progress-text">Question 1 of 10</p>
+
+    <div id="quiz-questions">
+      <!-- Questions rendered by JS -->
+    </div>
+
+    <div class="quiz-actions" id="quiz-actions">
+      <button class="quiz-btn secondary" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+      <button class="quiz-btn primary" id="next-btn" onclick="nextQuestion()">Next Question</button>
+    </div>
+
+    <div class="results-card" id="results">
+      <div class="results-icon" id="results-icon">🎉</div>
+      <h2 class="results-title">Quiz Complete!</h2>
+      <div class="results-score" id="results-score">0%</div>
+      <p class="results-message" id="results-message">Great job completing the Week 2 quiz!</p>
+      <div class="results-breakdown">
+        <div class="breakdown-item">
+          <div class="breakdown-value correct" id="correct-count">0</div>
+          <div class="breakdown-label">Correct</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-value incorrect" id="incorrect-count">0</div>
+          <div class="breakdown-label">Incorrect</div>
+        </div>
+      </div>
+      <button class="quiz-btn primary" onclick="reviewAnswers()">Review Answers</button>
+      <a href="../week3/js-events.html" class="nav-link">
+        Continue to Week 3
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        question: "In CSS Flexbox, which property aligns items along the main axis?",
+        code: null,
+        options: [
+          "align-items",
+          "justify-content",
+          "flex-direction",
+          "align-content"
+        ],
+        correct: 1,
+        explanation: "justify-content aligns flex items along the main axis (horizontal by default). align-items aligns items along the cross axis."
+      },
+      {
+        question: "What does this CSS Grid code create?",
+        code: `<span class="variable">grid-template-columns</span>: <span class="function">repeat</span>(<span class="number">3</span>, <span class="number">1fr</span>);`,
+        options: [
+          "3 rows of equal height",
+          "3 columns of equal width",
+          "A 3x3 grid",
+          "3 columns totaling 1 pixel"
+        ],
+        correct: 1,
+        explanation: "repeat(3, 1fr) creates 3 columns, each taking 1 fraction (equal part) of the available space."
+      },
+      {
+        question: "Which media query targets screens smaller than 768px?",
+        code: null,
+        options: [
+          "@media (min-width: 768px)",
+          "@media (max-width: 768px)",
+          "@media screen and (width: 768px)",
+          "@media (width < 768px)"
+        ],
+        correct: 1,
+        explanation: "max-width: 768px targets screens up to and including 768px wide. min-width would target screens 768px and larger."
+      },
+      {
+        question: "What is the correct way to declare a variable that won't be reassigned?",
+        code: null,
+        options: [
+          "var name = 'Ethan';",
+          "let name = 'Ethan';",
+          "const name = 'Ethan';",
+          "variable name = 'Ethan';"
+        ],
+        correct: 2,
+        explanation: "const is for values that won't change. let is for values that will be reassigned. var is outdated and should be avoided."
+      },
+      {
+        question: "What will this code output?",
+        code: `<span class="keyword">const</span> <span class="variable">score</span> = <span class="number">85</span>;
+<span class="keyword">const</span> <span class="variable">message</span> = <span class="string">\`Your score is \${score}%\`</span>;
+console.<span class="function">log</span>(message);`,
+        options: [
+          "Your score is ${score}%",
+          "Your score is 85%",
+          "undefined",
+          "An error"
+        ],
+        correct: 1,
+        explanation: "Template literals (backticks) allow embedding expressions with ${...}. The variable score is inserted into the string."
+      },
+      {
+        question: "What does === check in JavaScript?",
+        code: null,
+        options: [
+          "Value only",
+          "Type only",
+          "Value and type (strict equality)",
+          "Reference equality"
+        ],
+        correct: 2,
+        explanation: "=== is strict equality - it checks both value AND type. '10' === 10 is false because string !== number. Always prefer === over ==."
+      },
+      {
+        question: "What is the result of this function call?",
+        code: `<span class="keyword">const</span> <span class="function">add</span> = (<span class="variable">a</span>, <span class="variable">b</span> = <span class="number">5</span>) => <span class="variable">a</span> + <span class="variable">b</span>;
+console.<span class="function">log</span>(<span class="function">add</span>(<span class="number">10</span>));`,
+        options: [
+          "10",
+          "15",
+          "undefined",
+          "NaN"
+        ],
+        correct: 1,
+        explanation: "The function has a default parameter b = 5. When only one argument is passed, b defaults to 5. So 10 + 5 = 15."
+      },
+      {
+        question: "Which method selects ALL elements matching a CSS selector?",
+        code: null,
+        options: [
+          "document.getElementById()",
+          "document.querySelector()",
+          "document.querySelectorAll()",
+          "document.getElement()"
+        ],
+        correct: 2,
+        explanation: "querySelectorAll() returns a NodeList of ALL matching elements. querySelector() returns only the FIRST match."
+      },
+      {
+        question: "How do you add a CSS class to an element in JavaScript?",
+        code: null,
+        options: [
+          "element.class = 'active'",
+          "element.className.add('active')",
+          "element.classList.add('active')",
+          "element.addClassName('active')"
+        ],
+        correct: 2,
+        explanation: "classList.add() is the modern, preferred way to add classes. You can also use .remove(), .toggle(), and .contains()."
+      },
+      {
+        question: "What does this code do?",
+        code: `<span class="keyword">const</span> <span class="variable">div</span> = document.<span class="function">createElement</span>(<span class="string">'div'</span>);
+<span class="variable">div</span>.textContent = <span class="string">'Hello'</span>;
+document.body.<span class="function">appendChild</span>(<span class="variable">div</span>);`,
+        options: [
+          "Selects an existing div",
+          "Creates a new div and adds it to the page",
+          "Removes a div from the page",
+          "Changes the text of an existing div"
+        ],
+        correct: 1,
+        explanation: "createElement() creates a new element in memory, then appendChild() adds it to the DOM. This is how you dynamically add content to a page."
+      }
+    ];
+
+    let currentQuestion = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+    let quizSubmitted = false;
+
+    function renderQuestion(index) {
+      const q = questions[index];
+      const container = document.getElementById('quiz-questions');
+
+      const codeHTML = q.code ? `<div class="question-code">${q.code}</div>` : '';
+
+      container.innerHTML = `
+        <div class="question-card">
+          <div class="question-number">Question ${index + 1} of ${questions.length}</div>
+          <div class="question-text">${q.question}</div>
+          ${codeHTML}
+          <ul class="options-list">
+            ${q.options.map((opt, i) => `
+              <li class="option-item">
+                <input type="radio" name="q${index}" id="q${index}o${i}" value="${i}" class="option-input"
+                  ${userAnswers[index] === i ? 'checked' : ''} onchange="selectAnswer(${i})">
+                <label for="q${index}o${i}" class="option-label" id="label-${i}">
+                  <span class="option-marker">${String.fromCharCode(65 + i)}</span>
+                  <span class="option-text">${opt}</span>
+                </label>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="explanation">
+            <div class="explanation-title">💡 Explanation</div>
+            <p class="explanation-text">${q.explanation}</p>
+          </div>
+        </div>
+      `;
+
+      updateProgress();
+      updateButtons();
+    }
+
+    function selectAnswer(index) {
+      userAnswers[currentQuestion] = index;
+    }
+
+    function updateProgress() {
+      const progress = ((currentQuestion + 1) / questions.length) * 100;
+      document.getElementById('progress').style.width = `${progress}%`;
+      document.getElementById('progress-text').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+    }
+
+    function updateButtons() {
+      document.getElementById('prev-btn').disabled = currentQuestion === 0;
+
+      const nextBtn = document.getElementById('next-btn');
+      if (currentQuestion === questions.length - 1) {
+        nextBtn.textContent = 'Submit Quiz';
+        nextBtn.onclick = submitQuiz;
+      } else {
+        nextBtn.textContent = 'Next Question';
+        nextBtn.onclick = nextQuestion;
+      }
+    }
+
+    function nextQuestion() {
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        renderQuestion(currentQuestion);
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion(currentQuestion);
+      }
+    }
+
+    function submitQuiz() {
+      quizSubmitted = true;
+
+      // Calculate score
+      let correct = 0;
+      questions.forEach((q, i) => {
+        if (userAnswers[i] === q.correct) correct++;
+      });
+
+      const percentage = Math.round((correct / questions.length) * 100);
+
+      // Show results
+      document.getElementById('quiz-questions').style.display = 'none';
+      document.getElementById('quiz-actions').style.display = 'none';
+      document.getElementById('progress-text').style.display = 'none';
+
+      const results = document.getElementById('results');
+      results.classList.add('show');
+
+      document.getElementById('results-score').textContent = `${percentage}%`;
+      document.getElementById('correct-count').textContent = correct;
+      document.getElementById('incorrect-count').textContent = questions.length - correct;
+
+      // Set icon and message based on score
+      const icon = document.getElementById('results-icon');
+      const message = document.getElementById('results-message');
+
+      if (percentage >= 90) {
+        icon.textContent = '🏆';
+        message.textContent = 'Outstanding! You\'ve mastered Week 2 concepts!';
+      } else if (percentage >= 70) {
+        icon.textContent = '🎉';
+        message.textContent = 'Great job! You\'re ready to move on to Week 3!';
+      } else if (percentage >= 50) {
+        icon.textContent = '📚';
+        message.textContent = 'Good effort! Consider reviewing the lessons before continuing.';
+      } else {
+        icon.textContent = '💪';
+        message.textContent = 'Keep practicing! Review the lessons and try again.';
+      }
+    }
+
+    function reviewAnswers() {
+      document.getElementById('results').classList.remove('show');
+      document.getElementById('quiz-questions').style.display = 'block';
+      document.getElementById('quiz-actions').style.display = 'none';
+      document.getElementById('progress-text').style.display = 'block';
+
+      currentQuestion = 0;
+      showReviewQuestion(currentQuestion);
+    }
+
+    function showReviewQuestion(index) {
+      renderQuestion(index);
+
+      const q = questions[index];
+      const userAnswer = userAnswers[index];
+
+      // Show correct/incorrect
+      q.options.forEach((_, i) => {
+        const label = document.getElementById(`label-${i}`);
+        if (i === q.correct) {
+          label.classList.add('correct');
+        } else if (i === userAnswer && userAnswer !== q.correct) {
+          label.classList.add('incorrect');
+        }
+      });
+
+      // Show explanation
+      document.getElementById('explanation').classList.add('show');
+
+      // Update navigation for review mode
+      const actionsDiv = document.getElementById('quiz-actions');
+      actionsDiv.style.display = 'flex';
+      actionsDiv.innerHTML = `
+        <button class="quiz-btn secondary" onclick="reviewPrev()" ${index === 0 ? 'disabled' : ''}>Previous</button>
+        <button class="quiz-btn primary" onclick="reviewNext()">${index === questions.length - 1 ? 'Back to Results' : 'Next'}</button>
+      `;
+    }
+
+    function reviewNext() {
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        showReviewQuestion(currentQuestion);
+      } else {
+        // Back to results
+        document.getElementById('quiz-questions').style.display = 'none';
+        document.getElementById('quiz-actions').style.display = 'none';
+        document.getElementById('results').classList.add('show');
+      }
+    }
+
+    function reviewPrev() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        showReviewQuestion(currentQuestion);
+      }
+    }
+
+    // Initialize
+    renderQuestion(0);
+  </script>
+</body>
+</html>
