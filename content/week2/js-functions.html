@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 12: JavaScript Functions | CodeCraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a24;
+      --text-primary: #f0f0f0;
+      --text-secondary: #a0a0b0;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.3);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; }
+
+    .lesson-header {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem;
+    }
+    .lesson-nav {
+      max-width: 1000px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .back-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .lesson-badge {
+      background: var(--accent);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .lesson-title-area { max-width: 1000px; margin: 0 auto; }
+    .lesson-title-area h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .lesson-meta { color: var(--text-secondary); display: flex; gap: 1.5rem; flex-wrap: wrap; }
+
+    .lesson-content { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem; }
+
+    .content-section { margin-bottom: 3rem; }
+    .content-section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    .content-section h3 {
+      font-size: 1.25rem;
+      margin: 1.5rem 0 0.75rem;
+      color: var(--text-primary);
+    }
+    .content-section p { color: var(--text-secondary); margin-bottom: 1rem; }
+
+    .code-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .code-header {
+      background: var(--bg-secondary);
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .code-content {
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .code-content code { color: var(--text-primary); }
+
+    .keyword { color: #c792ea; }
+    .string { color: #c3e88d; }
+    .number { color: #f78c6c; }
+    .comment { color: #676e95; font-style: italic; }
+    .function { color: #82aaff; }
+    .variable { color: #f07178; }
+    .operator { color: #89ddff; }
+    .console { color: #ffcb6b; }
+
+    .callout {
+      padding: 1.25rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+    }
+    .callout-info {
+      background: rgba(99, 102, 241, 0.1);
+      border-left: 4px solid var(--accent);
+    }
+    .callout-success {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid var(--success);
+    }
+    .callout-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 4px solid var(--warning);
+    }
+    .callout-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .demo-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .demo-box h4 {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .demo-output {
+      background: #1e1e2e;
+      border-radius: 6px;
+      padding: 1rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: #a0ffa0;
+      min-height: 80px;
+    }
+    .demo-buttons {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .demo-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .demo-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .comparison-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .comparison-card h4 {
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+    }
+    .comparison-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .practice-exercise {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(16, 185, 129, 0.1));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .practice-exercise h3 {
+      color: var(--success);
+      margin-bottom: 1rem;
+    }
+
+    .lesson-navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+    .nav-btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .lesson-title-area h1 { font-size: 1.75rem; }
+      .lesson-content { padding: 2rem 1rem; }
+      .lesson-navigation { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="lesson-header">
+    <nav class="lesson-nav">
+      <a href="../../index.html" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Dashboard
+      </a>
+      <span class="lesson-badge">Week 2 • Lesson 12</span>
+    </nav>
+    <div class="lesson-title-area">
+      <h1>🔧 JavaScript Functions</h1>
+      <div class="lesson-meta">
+        <span>📚 Functions, Parameters & Arrow Functions</span>
+        <span>⏱️ 40 minutes</span>
+        <span>🎯 Essential</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="lesson-content">
+    <section class="content-section">
+      <h2>What are Functions?</h2>
+      <p>Functions are reusable blocks of code that perform specific tasks. Instead of writing the same code over and over, you define it once in a function and call it whenever needed. Functions are the building blocks of JavaScript applications.</p>
+
+      <div class="callout callout-info">
+        <div class="callout-title">💡 Think of Functions Like Recipes</div>
+        <p>A recipe (function) has a name, takes ingredients (parameters), follows steps (code), and produces a dish (return value). Once you have the recipe, you can make the dish anytime by following it.</p>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Function Declaration</h2>
+      <p>The most common way to create a function:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript</span>
+        </div>
+        <div class="code-content">
+<code><span class="comment">// Function declaration syntax</span>
+<span class="keyword">function</span> <span class="function">greet</span>() {
+  <span class="console">console</span>.<span class="function">log</span>(<span class="string">'Hello, World!'</span>);
+}
+
+<span class="comment">// Calling (invoking) the function</span>
+<span class="function">greet</span>();  <span class="comment">// Output: Hello, World!</span>
+<span class="function">greet</span>();  <span class="comment">// Output: Hello, World!</span>
+
+<span class="comment">// Function with parameters (inputs)</span>
+<span class="keyword">function</span> <span class="function">greetUser</span>(<span class="variable">name</span>) {
+  <span class="console">console</span>.<span class="function">log</span>(<span class="string">`Hello, ${name}!`</span>);
+}
+
+<span class="function">greetUser</span>(<span class="string">'Ethan'</span>);    <span class="comment">// Output: Hello, Ethan!</span>
+<span class="function">greetUser</span>(<span class="string">'Sarah'</span>);    <span class="comment">// Output: Hello, Sarah!</span>
+
+<span class="comment">// Multiple parameters</span>
+<span class="keyword">function</span> <span class="function">addNumbers</span>(<span class="variable">a</span>, <span class="variable">b</span>) {
+  <span class="console">console</span>.<span class="function">log</span>(<span class="variable">a</span> <span class="operator">+</span> <span class="variable">b</span>);
+}
+
+<span class="function">addNumbers</span>(<span class="number">5</span>, <span class="number">3</span>);  <span class="comment">// Output: 8</span></code>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Return Values</h2>
+      <p>Functions can return values using the <code>return</code> keyword. This lets you use the result elsewhere in your code:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript</span>
+        </div>
+        <div class="code-content">
+<code><span class="comment">// Function that returns a value</span>
+<span class="keyword">function</span> <span class="function">add</span>(<span class="variable">a</span>, <span class="variable">b</span>) {
+  <span class="keyword">return</span> <span class="variable">a</span> <span class="operator">+</span> <span class="variable">b</span>;
+}
+
+<span class="comment">// Store the returned value in a variable</span>
+<span class="keyword">const</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="function">add</span>(<span class="number">10</span>, <span class="number">5</span>);
+<span class="console">console</span>.<span class="function">log</span>(<span class="variable">sum</span>);  <span class="comment">// Output: 15</span>
+
+<span class="comment">// Use returned value directly</span>
+<span class="console">console</span>.<span class="function">log</span>(<span class="function">add</span>(<span class="number">3</span>, <span class="number">7</span>));  <span class="comment">// Output: 10</span>
+
+<span class="comment">// Use in calculations</span>
+<span class="keyword">const</span> <span class="variable">total</span> <span class="operator">=</span> <span class="function">add</span>(<span class="number">10</span>, <span class="number">20</span>) <span class="operator">+</span> <span class="function">add</span>(<span class="number">5</span>, <span class="number">5</span>);  <span class="comment">// 30 + 10 = 40</span>
+
+<span class="comment">// Practical example: Calculate quiz score percentage</span>
+<span class="keyword">function</span> <span class="function">calculatePercentage</span>(<span class="variable">correct</span>, <span class="variable">total</span>) {
+  <span class="keyword">return</span> (<span class="variable">correct</span> <span class="operator">/</span> <span class="variable">total</span>) <span class="operator">*</span> <span class="number">100</span>;
+}
+
+<span class="keyword">const</span> <span class="variable">myScore</span> <span class="operator">=</span> <span class="function">calculatePercentage</span>(<span class="number">17</span>, <span class="number">20</span>);
+<span class="console">console</span>.<span class="function">log</span>(<span class="string">`Your score: ${myScore}%`</span>);  <span class="comment">// Output: Your score: 85%</span></code>
+        </div>
+      </div>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">⚠️ Return Stops Execution</div>
+        <p>Once a <code>return</code> statement executes, the function stops immediately. Any code after <code>return</code> will never run.</p>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript</span>
+        </div>
+        <div class="code-content">
+<code><span class="keyword">function</span> <span class="function">checkScore</span>(<span class="variable">score</span>) {
+  <span class="keyword">if</span> (<span class="variable">score</span> <span class="operator">>=</span> <span class="number">70</span>) {
+    <span class="keyword">return</span> <span class="string">'Pass'</span>;  <span class="comment">// Function exits here if true</span>
+  }
+  <span class="keyword">return</span> <span class="string">'Fail'</span>;  <span class="comment">// Only runs if score < 70</span>
+}
+
+<span class="console">console</span>.<span class="function">log</span>(<span class="function">checkScore</span>(<span class="number">85</span>));  <span class="comment">// Output: Pass</span>
+<span class="console">console</span>.<span class="function">log</span>(<span class="function">checkScore</span>(<span class="number">60</span>));  <span class="comment">// Output: Fail</span></code>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Default Parameters</h2>
+      <p>You can set default values for parameters. If no argument is passed, the default is used:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript</span>
+        </div>
+        <div class="code-content">
+<code><span class="comment">// Default parameter values</span>
+<span class="keyword">function</span> <span class="function">greet</span>(<span class="variable">name</span> <span class="operator">=</span> <span class="string">'Guest'</span>, <span class="variable">greeting</span> <span class="operator">=</span> <span class="string">'Hello'</span>) {
+  <span class="keyword">return</span> <span class="string">`${greeting}, ${name}!`</span>;
+}
+
+<span class="console">console</span>.<span class="function">log</span>(<span class="function">greet</span>());                     <span class="comment">// Hello, Guest!</span>
+<span class="console">console</span>.<span class="function">log</span>(<span class="function">greet</span>(<span class="string">'Ethan'</span>));               <span class="comment">// Hello, Ethan!</span>
+<span class="console">console</span>.<span class="function">log</span>(<span class="function">greet</span>(<span class="string">'Ethan'</span>, <span class="string">'Welcome'</span>));   <span class="comment">// Welcome, Ethan!</span>
+
+<span class="comment">// Practical: Quiz settings with defaults</span>
+<span class="keyword">function</span> <span class="function">createQuiz</span>(<span class="variable">topic</span>, <span class="variable">questions</span> <span class="operator">=</span> <span class="number">10</span>, <span class="variable">timeLimit</span> <span class="operator">=</span> <span class="number">30</span>) {
+  <span class="keyword">return</span> {
+    <span class="variable">topic</span>: <span class="variable">topic</span>,
+    <span class="variable">questions</span>: <span class="variable">questions</span>,
+    <span class="variable">timeLimit</span>: <span class="variable">timeLimit</span>
+  };
+}
+
+<span class="keyword">const</span> <span class="variable">quiz1</span> <span class="operator">=</span> <span class="function">createQuiz</span>(<span class="string">'Ethics'</span>);           <span class="comment">// 10 questions, 30 min</span>
+<span class="keyword">const</span> <span class="variable">quiz2</span> <span class="operator">=</span> <span class="function">createQuiz</span>(<span class="string">'Assessment'</span>, <span class="number">20</span>);  <span class="comment">// 20 questions, 30 min</span></code>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Arrow Functions</h2>
+      <p>Arrow functions are a shorter, modern syntax for writing functions. They're especially useful for simple operations:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript</span>
+        </div>
+        <div class="code-content">
+<code><span class="comment">// Traditional function</span>
+<span class="keyword">function</span> <span class="function">add</span>(<span class="variable">a</span>, <span class="variable">b</span>) {
+  <span class="keyword">return</span> <span class="variable">a</span> <span class="operator">+</span> <span class="variable">b</span>;
+}
+
+<span class="comment">// Arrow function (equivalent)</span>
+<span class="keyword">const</span> <span class="function">addArrow</span> <span class="operator">=</span> (<span class="variable">a</span>, <span class="variable">b</span>) <span class="operator">=></span> {
+  <span class="keyword">return</span> <span class="variable">a</span> <span class="operator">+</span> <span class="variable">b</span>;
+};
+
+<span class="comment">// Short arrow function (implicit return)</span>
+<span class="comment">// When there's only one expression, you can omit {} and return</span>
+<span class="keyword">const</span> <span class="function">addShort</span> <span class="operator">=</span> (<span class="variable">a</span>, <span class="variable">b</span>) <span class="operator">=></span> <span class="variable">a</span> <span class="operator">+</span> <span class="variable">b</span>;
+
+<span class="comment">// Single parameter - parentheses optional</span>
+<span class="keyword">const</span> <span class="function">double</span> <span class="operator">=</span> <span class="variable">n</span> <span class="operator">=></span> <span class="variable">n</span> <span class="operator">*</span> <span class="number">2</span>;
+<span class="keyword">const</span> <span class="function">square</span> <span class="operator">=</span> <span class="variable">n</span> <span class="operator">=></span> <span class="variable">n</span> <span class="operator">*</span> <span class="variable">n</span>;
+
+<span class="console">console</span>.<span class="function">log</span>(<span class="function">double</span>(<span class="number">5</span>));   <span class="comment">// 10</span>
+<span class="console">console</span>.<span class="function">log</span>(<span class="function">square</span>(<span class="number">4</span>));   <span class="comment">// 16</span>
+
+<span class="comment">// No parameters - empty parentheses required</span>
+<span class="keyword">const</span> <span class="function">sayHello</span> <span class="operator">=</span> () <span class="operator">=></span> <span class="string">'Hello!'</span>;
+<span class="keyword">const</span> <span class="function">getTimestamp</span> <span class="operator">=</span> () <span class="operator">=></span> <span class="keyword">new</span> <span class="function">Date</span>().<span class="function">toISOString</span>();</code>
+        </div>
+      </div>
+
+      <div class="comparison-grid">
+        <div class="comparison-card">
+          <h4>Traditional Function</h4>
+          <p>Use when you need a named function, hoisting behavior, or <code>this</code> binding.</p>
+          <code style="display: block; margin-top: 0.5rem; color: var(--accent);">function name() { }</code>
+        </div>
+        <div class="comparison-card">
+          <h4>Arrow Function</h4>
+          <p>Use for callbacks, short operations, and when you want concise syntax.</p>
+          <code style="display: block; margin-top: 0.5rem; color: var(--accent);">const name = () => { }</code>
+        </div>
+      </div>
+
+      <div class="callout callout-success">
+        <div class="callout-title">✅ When to Use Arrow Functions</div>
+        <ul style="color: var(--text-secondary); margin-left: 1rem;">
+          <li>Array methods like <code>map</code>, <code>filter</code>, <code>forEach</code></li>
+          <li>Simple one-liner operations</li>
+          <li>Callback functions</li>
+          <li>When you don't need your own <code>this</code> context</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Practical Examples</h2>
+      <p>Let's look at real-world functions you might use when building PassEPPP:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript - Quiz Score Calculator</span>
+        </div>
+        <div class="code-content">
+<code><span class="comment">// Calculate letter grade from percentage</span>
+<span class="keyword">function</span> <span class="function">getLetterGrade</span>(<span class="variable">percentage</span>) {
+  <span class="keyword">if</span> (<span class="variable">percentage</span> <span class="operator">>=</span> <span class="number">90</span>) <span class="keyword">return</span> <span class="string">'A'</span>;
+  <span class="keyword">if</span> (<span class="variable">percentage</span> <span class="operator">>=</span> <span class="number">80</span>) <span class="keyword">return</span> <span class="string">'B'</span>;
+  <span class="keyword">if</span> (<span class="variable">percentage</span> <span class="operator">>=</span> <span class="number">70</span>) <span class="keyword">return</span> <span class="string">'C'</span>;
+  <span class="keyword">if</span> (<span class="variable">percentage</span> <span class="operator">>=</span> <span class="number">60</span>) <span class="keyword">return</span> <span class="string">'D'</span>;
+  <span class="keyword">return</span> <span class="string">'F'</span>;
+}
+
+<span class="comment">// Format time remaining</span>
+<span class="keyword">function</span> <span class="function">formatTime</span>(<span class="variable">seconds</span>) {
+  <span class="keyword">const</span> <span class="variable">mins</span> <span class="operator">=</span> <span class="function">Math</span>.<span class="function">floor</span>(<span class="variable">seconds</span> <span class="operator">/</span> <span class="number">60</span>);
+  <span class="keyword">const</span> <span class="variable">secs</span> <span class="operator">=</span> <span class="variable">seconds</span> <span class="operator">%</span> <span class="number">60</span>;
+  <span class="keyword">return</span> <span class="string">`${mins}:${secs.toString().padStart(2, '0')}`</span>;
+}
+
+<span class="console">console</span>.<span class="function">log</span>(<span class="function">formatTime</span>(<span class="number">125</span>));  <span class="comment">// "2:05"</span>
+<span class="console">console</span>.<span class="function">log</span>(<span class="function">formatTime</span>(<span class="number">60</span>));   <span class="comment">// "1:00"</span>
+
+<span class="comment">// Generate progress message</span>
+<span class="keyword">function</span> <span class="function">getProgressMessage</span>(<span class="variable">completed</span>, <span class="variable">total</span>) {
+  <span class="keyword">const</span> <span class="variable">percentage</span> <span class="operator">=</span> <span class="function">Math</span>.<span class="function">round</span>((<span class="variable">completed</span> <span class="operator">/</span> <span class="variable">total</span>) <span class="operator">*</span> <span class="number">100</span>);
+
+  <span class="keyword">if</span> (<span class="variable">percentage</span> <span class="operator">===</span> <span class="number">100</span>) {
+    <span class="keyword">return</span> <span class="string">'🎉 Congratulations! You completed all questions!'</span>;
+  } <span class="keyword">else if</span> (<span class="variable">percentage</span> <span class="operator">>=</span> <span class="number">75</span>) {
+    <span class="keyword">return</span> <span class="string">`Almost there! ${percentage}% complete.`</span>;
+  } <span class="keyword">else if</span> (<span class="variable">percentage</span> <span class="operator">>=</span> <span class="number">50</span>) {
+    <span class="keyword">return</span> <span class="string">`Halfway there! ${percentage}% complete.`</span>;
+  }
+  <span class="keyword">return</span> <span class="string">`Keep going! ${percentage}% complete.`</span>;
+}
+
+<span class="console">console</span>.<span class="function">log</span>(<span class="function">getProgressMessage</span>(<span class="number">15</span>, <span class="number">20</span>)); <span class="comment">// Almost there! 75% complete.</span></code>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Functions Calling Functions</h2>
+      <p>Functions can call other functions, allowing you to build complex logic from simple pieces:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span>JavaScript</span>
+        </div>
+        <div class="code-content">
+<code><span class="comment">// Small, focused functions</span>
+<span class="keyword">const</span> <span class="function">calculatePercentage</span> <span class="operator">=</span> (<span class="variable">correct</span>, <span class="variable">total</span>) <span class="operator">=></span> (<span class="variable">correct</span> <span class="operator">/</span> <span class="variable">total</span>) <span class="operator">*</span> <span class="number">100</span>;
+
+<span class="keyword">const</span> <span class="function">getLetterGrade</span> <span class="operator">=</span> (<span class="variable">percentage</span>) <span class="operator">=></span> {
+  <span class="keyword">if</span> (<span class="variable">percentage</span> <span class="operator">>=</span> <span class="number">90</span>) <span class="keyword">return</span> <span class="string">'A'</span>;
+  <span class="keyword">if</span> (<span class="variable">percentage</span> <span class="operator">>=</span> <span class="number">80</span>) <span class="keyword">return</span> <span class="string">'B'</span>;
+  <span class="keyword">if</span> (<span class="variable">percentage</span> <span class="operator">>=</span> <span class="number">70</span>) <span class="keyword">return</span> <span class="string">'C'</span>;
+  <span class="keyword">if</span> (<span class="variable">percentage</span> <span class="operator">>=</span> <span class="number">60</span>) <span class="keyword">return</span> <span class="string">'D'</span>;
+  <span class="keyword">return</span> <span class="string">'F'</span>;
+};
+
+<span class="keyword">const</span> <span class="function">isPassing</span> <span class="operator">=</span> (<span class="variable">percentage</span>) <span class="operator">=></span> <span class="variable">percentage</span> <span class="operator">>=</span> <span class="number">70</span>;
+
+<span class="comment">// Main function that uses the smaller ones</span>
+<span class="keyword">function</span> <span class="function">getQuizResults</span>(<span class="variable">correct</span>, <span class="variable">total</span>) {
+  <span class="keyword">const</span> <span class="variable">percentage</span> <span class="operator">=</span> <span class="function">calculatePercentage</span>(<span class="variable">correct</span>, <span class="variable">total</span>);
+  <span class="keyword">const</span> <span class="variable">grade</span> <span class="operator">=</span> <span class="function">getLetterGrade</span>(<span class="variable">percentage</span>);
+  <span class="keyword">const</span> <span class="variable">passed</span> <span class="operator">=</span> <span class="function">isPassing</span>(<span class="variable">percentage</span>);
+
+  <span class="keyword">return</span> {
+    <span class="variable">score</span>: <span class="string">`${correct}/${total}`</span>,
+    <span class="variable">percentage</span>: <span class="string">`${percentage.toFixed(1)}%`</span>,
+    <span class="variable">grade</span>: <span class="variable">grade</span>,
+    <span class="variable">passed</span>: <span class="variable">passed</span>,
+    <span class="variable">message</span>: <span class="variable">passed</span> <span class="operator">?</span> <span class="string">'Great job!'</span> <span class="operator">:</span> <span class="string">'Keep studying!'</span>
+  };
+}
+
+<span class="keyword">const</span> <span class="variable">results</span> <span class="operator">=</span> <span class="function">getQuizResults</span>(<span class="number">17</span>, <span class="number">20</span>);
+<span class="console">console</span>.<span class="function">log</span>(<span class="variable">results</span>);
+<span class="comment">// {</span>
+<span class="comment">//   score: "17/20",</span>
+<span class="comment">//   percentage: "85.0%",</span>
+<span class="comment">//   grade: "B",</span>
+<span class="comment">//   passed: true,</span>
+<span class="comment">//   message: "Great job!"</span>
+<span class="comment">// }</span></code>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Interactive Demo</h2>
+      <div class="demo-box">
+        <h4>Try These Functions</h4>
+        <div class="demo-output" id="demo-output">
+          <span style="color: #666;">// Click buttons to run functions...</span>
+        </div>
+        <div class="demo-buttons">
+          <button class="demo-btn" onclick="demoGrade()">Get Grade</button>
+          <button class="demo-btn" onclick="demoTime()">Format Time</button>
+          <button class="demo-btn" onclick="demoProgress()">Check Progress</button>
+          <button class="demo-btn" onclick="demoQuizResults()">Quiz Results</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="practice-exercise">
+      <h3>🏋️ Practice Exercise</h3>
+      <p>Create the following functions:</p>
+      <ol style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 1rem;">
+        <li><strong>isValidEmail(email)</strong> - Returns true if email contains "@" and "."</li>
+        <li><strong>getInitials(firstName, lastName)</strong> - Returns initials like "EG" for "Ethan Grucza"</li>
+        <li><strong>calculateAverage(scores)</strong> - Takes an array of numbers, returns the average</li>
+      </ol>
+      <div class="code-block" style="margin-top: 1rem;">
+        <div class="code-header">
+          <span>Expected Output</span>
+        </div>
+        <div class="code-content">
+<code><span class="function">isValidEmail</span>(<span class="string">'test@example.com'</span>);  <span class="comment">// true</span>
+<span class="function">isValidEmail</span>(<span class="string">'invalid'</span>);           <span class="comment">// false</span>
+
+<span class="function">getInitials</span>(<span class="string">'Ethan'</span>, <span class="string">'Grucza'</span>);  <span class="comment">// "EG"</span>
+<span class="function">getInitials</span>(<span class="string">'John'</span>, <span class="string">'Doe'</span>);      <span class="comment">// "JD"</span>
+
+<span class="function">calculateAverage</span>([<span class="number">80</span>, <span class="number">90</span>, <span class="number">85</span>]);   <span class="comment">// 85</span></code>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Key Takeaways</h2>
+      <div class="callout callout-success">
+        <ul style="color: var(--text-secondary); margin-left: 1rem;">
+          <li>Functions are reusable blocks of code - define once, use many times</li>
+          <li>Parameters allow functions to accept inputs; return values provide outputs</li>
+          <li>Default parameters provide fallback values when arguments aren't passed</li>
+          <li>Arrow functions offer concise syntax: <code>const fn = (x) => x * 2</code></li>
+          <li>Build complex logic by having functions call other functions</li>
+          <li>Keep functions small and focused on a single task</li>
+        </ul>
+      </div>
+    </section>
+
+    <nav class="lesson-navigation">
+      <a href="js-intro.html" class="nav-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Previous: Intro to JavaScript
+      </a>
+      <a href="js-dom-basics.html" class="nav-btn primary">
+        Next: DOM Manipulation
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </nav>
+  </main>
+
+  <script>
+    const outputEl = document.getElementById('demo-output');
+
+    function showOutput(text) {
+      outputEl.innerHTML = `<span style="color: #a0ffa0">> ${text}</span>`;
+    }
+
+    // Demo functions
+    const calculatePercentage = (correct, total) => (correct / total) * 100;
+
+    const getLetterGrade = (percentage) => {
+      if (percentage >= 90) return 'A';
+      if (percentage >= 80) return 'B';
+      if (percentage >= 70) return 'C';
+      if (percentage >= 60) return 'D';
+      return 'F';
+    };
+
+    const formatTime = (seconds) => {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const getProgressMessage = (completed, total) => {
+      const percentage = Math.round((completed / total) * 100);
+      if (percentage === 100) return '🎉 Complete!';
+      if (percentage >= 75) return `Almost there! ${percentage}% complete.`;
+      if (percentage >= 50) return `Halfway! ${percentage}% complete.`;
+      return `Keep going! ${percentage}% complete.`;
+    };
+
+    function demoGrade() {
+      const correct = Math.floor(Math.random() * 10) + 11; // 11-20
+      const percentage = calculatePercentage(correct, 20);
+      const grade = getLetterGrade(percentage);
+      showOutput(`Score: ${correct}/20 = ${percentage.toFixed(0)}% = Grade ${grade}`);
+    }
+
+    function demoTime() {
+      const seconds = Math.floor(Math.random() * 300) + 60; // 60-360
+      showOutput(`${seconds} seconds = ${formatTime(seconds)}`);
+    }
+
+    function demoProgress() {
+      const completed = Math.floor(Math.random() * 21); // 0-20
+      showOutput(getProgressMessage(completed, 20));
+    }
+
+    function demoQuizResults() {
+      const correct = Math.floor(Math.random() * 15) + 6; // 6-20
+      const percentage = calculatePercentage(correct, 20);
+      const grade = getLetterGrade(percentage);
+      const passed = percentage >= 70;
+      showOutput(`${correct}/20 (${percentage.toFixed(0)}%) - Grade: ${grade} - ${passed ? '✅ PASSED' : '❌ Failed'}`);
+    }
+  </script>
+</body>
+</html>
