@@ -70,7 +70,6 @@
     <div class="breadcrumb">
       <a href="/pages/dashboard.html">Dashboard</a> &rsaquo; Week 2 &rsaquo; Lesson 8
     </div>
-
     <header class="lesson-header">
       <div class="lesson-week">Week 2 &bull; Advanced CSS & JavaScript</div>
       <h1 class="lesson-title">Flexbox Layout</h1>
@@ -79,7 +78,6 @@
         <span>Lesson 8 of 28</span>
       </div>
     </header>
-
     <div class="objectives-box">
       <div class="objectives-title">What you'll learn</div>
       <ul class="objectives-list">
@@ -88,12 +86,9 @@
         <li>Build responsive navigation with Flexbox</li>
       </ul>
     </div>
-
     <div class="lesson-content">
       <h2>Why Flexbox?</h2>
-
       <p>Before Flexbox, centering things in CSS was notoriously difficult. Floats were hacky, and vertical centering was a nightmare. <strong>Flexbox</strong> solves all of this with a powerful, intuitive layout system.</p>
-
       <p>Flexbox is designed for <strong>one-dimensional layouts</strong> — either a row or a column. It excels at:</p>
       <ul>
         <li>Distributing space between items</li>
@@ -101,31 +96,12 @@
         <li>Creating responsive layouts without media queries</li>
         <li>Reordering elements visually</li>
       </ul>
-
       <h2>The Basics: Container & Items</h2>
-
       <p>Flexbox has two key concepts:</p>
       <ul>
         <li><strong>Flex Container:</strong> The parent element with <span class="inline-code">display: flex</span></li>
         <li><strong>Flex Items:</strong> The direct children of a flex container</li>
       </ul>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-filename">flexbox-basics.css</span>
-          <button class="code-copy" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><span class="comment">/* The parent becomes a flex container */</span>
-<span class="selector">.container</span> {
-  <span class="property">display</span>: <span class="value">flex</span>;
-}
-
-<span class="comment">/* Children automatically become flex items */</span>
-<span class="selector">.item</span> {
-  <span class="comment">/* No special CSS needed - they're flex items now! */</span>
-}</pre>
-      </div>
-
       <div class="demo-container">
         <div class="demo-label">display: flex (items flow in a row)</div>
         <div class="flex-demo">
@@ -134,43 +110,8 @@
           <div class="flex-item">Item 3</div>
         </div>
       </div>
-
-      <h2>Main Axis vs Cross Axis</h2>
-
-      <p>Flexbox works on two axes:</p>
-      <ul>
-        <li><strong>Main Axis:</strong> The primary direction (horizontal by default)</li>
-        <li><strong>Cross Axis:</strong> Perpendicular to the main axis (vertical by default)</li>
-      </ul>
-
-      <div class="code-block">
-        <pre><span class="comment">/* Change direction with flex-direction */</span>
-<span class="selector">.row</span> { <span class="property">flex-direction</span>: <span class="value">row</span>; }         <span class="comment">/* default: left to right */</span>
-<span class="selector">.row-reverse</span> { <span class="property">flex-direction</span>: <span class="value">row-reverse</span>; }  <span class="comment">/* right to left */</span>
-<span class="selector">.column</span> { <span class="property">flex-direction</span>: <span class="value">column</span>; }      <span class="comment">/* top to bottom */</span>
-<span class="selector">.column-reverse</span> { <span class="property">flex-direction</span>: <span class="value">column-reverse</span>; } <span class="comment">/* bottom to top */</span></pre>
-      </div>
-
       <h2>justify-content: Main Axis Alignment</h2>
-
       <p>This controls how items are distributed along the <strong>main axis</strong>.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-filename">justify-content.css</span>
-          <button class="code-copy" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><span class="selector">.container</span> {
-  <span class="property">display</span>: <span class="value">flex</span>;
-  <span class="property">justify-content</span>: <span class="value">flex-start</span>;     <span class="comment">/* default: pack items at start */</span>
-  <span class="property">justify-content</span>: <span class="value">flex-end</span>;       <span class="comment">/* pack at end */</span>
-  <span class="property">justify-content</span>: <span class="value">center</span>;         <span class="comment">/* center items */</span>
-  <span class="property">justify-content</span>: <span class="value">space-between</span>;  <span class="comment">/* equal space between items */</span>
-  <span class="property">justify-content</span>: <span class="value">space-around</span>;   <span class="comment">/* equal space around items */</span>
-  <span class="property">justify-content</span>: <span class="value">space-evenly</span>;   <span class="comment">/* truly equal spacing */</span>
-}</pre>
-      </div>
-
       <div class="demo-container">
         <div class="demo-label">justify-content: space-between</div>
         <div class="flex-demo" style="justify-content: space-between;">
@@ -178,121 +119,24 @@
           <div class="flex-item">Nav</div>
         </div>
       </div>
-
       <div class="demo-container">
         <div class="demo-label">justify-content: center</div>
         <div class="flex-demo" style="justify-content: center;">
           <div class="flex-item">Centered</div>
         </div>
       </div>
-
       <h2>align-items: Cross Axis Alignment</h2>
-
       <p>This controls alignment along the <strong>cross axis</strong> (vertical for row layouts).</p>
-
-      <div class="code-block">
-        <pre><span class="selector">.container</span> {
-  <span class="property">display</span>: <span class="value">flex</span>;
-  <span class="property">align-items</span>: <span class="value">stretch</span>;     <span class="comment">/* default: stretch to fill container */</span>
-  <span class="property">align-items</span>: <span class="value">flex-start</span>;  <span class="comment">/* align to top */</span>
-  <span class="property">align-items</span>: <span class="value">flex-end</span>;    <span class="comment">/* align to bottom */</span>
-  <span class="property">align-items</span>: <span class="value">center</span>;      <span class="comment">/* center vertically */</span>
-}</pre>
-      </div>
-
       <div class="demo-container">
         <div class="demo-label">align-items: center (perfect vertical centering!)</div>
         <div class="flex-demo" style="justify-content: center; align-items: center; height: 150px;">
           <div class="flex-item">Perfectly Centered!</div>
         </div>
       </div>
-
       <div class="callout callout-tip">
         <div class="callout-title">The Holy Grail of Centering</div>
         <p>To center something both horizontally and vertically: <span class="inline-code">display: flex; justify-content: center; align-items: center;</span>. Three lines. That's it!</p>
       </div>
-
-      <h2>gap: Spacing Between Items</h2>
-
-      <p>The <span class="inline-code">gap</span> property adds space between flex items (not around the edges).</p>
-
-      <div class="code-block">
-        <pre><span class="selector">.container</span> {
-  <span class="property">display</span>: <span class="value">flex</span>;
-  <span class="property">gap</span>: <span class="value">16px</span>;         <span class="comment">/* Equal gap between all items */</span>
-  <span class="property">gap</span>: <span class="value">16px 32px</span>;    <span class="comment">/* row-gap | column-gap */</span>
-}</pre>
-      </div>
-
-      <h2>Real Example: Navigation Bar</h2>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-filename">nav.css</span>
-          <button class="code-copy" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><span class="selector">.nav</span> {
-  <span class="property">display</span>: <span class="value">flex</span>;
-  <span class="property">justify-content</span>: <span class="value">space-between</span>;  <span class="comment">/* Logo left, links right */</span>
-  <span class="property">align-items</span>: <span class="value">center</span>;             <span class="comment">/* Vertically center */</span>
-  <span class="property">padding</span>: <span class="value">16px 32px</span>;
-  <span class="property">background</span>: <span class="value">#09090b</span>;
-}
-
-<span class="selector">.nav-links</span> {
-  <span class="property">display</span>: <span class="value">flex</span>;
-  <span class="property">gap</span>: <span class="value">24px</span>;                       <span class="comment">/* Space between links */</span>
-}
-
-<span class="selector">.nav-links a</span> {
-  <span class="property">color</span>: <span class="value">#a1a1aa</span>;
-  <span class="property">text-decoration</span>: <span class="value">none</span>;
-}
-
-<span class="selector">.nav-links a:hover</span> {
-  <span class="property">color</span>: <span class="value">#fafafa</span>;
-}</pre>
-      </div>
-
-      <div class="demo-container">
-        <div class="demo-label">Navigation with Flexbox</div>
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: var(--bg-secondary); border-radius: 8px;">
-          <div style="font-weight: 600; font-size: 1.1rem;">CodeCraft</div>
-          <div style="display: flex; gap: 24px;">
-            <span style="color: var(--text-secondary);">Home</span>
-            <span style="color: var(--text-secondary);">Learn</span>
-            <span style="color: var(--text-secondary);">Practice</span>
-            <span style="color: var(--accent);">Login</span>
-          </div>
-        </div>
-      </div>
-
-      <h2>flex-wrap: Handling Overflow</h2>
-
-      <p>By default, flex items try to fit on one line. Use <span class="inline-code">flex-wrap</span> to allow wrapping.</p>
-
-      <div class="code-block">
-        <pre><span class="selector">.container</span> {
-  <span class="property">display</span>: <span class="value">flex</span>;
-  <span class="property">flex-wrap</span>: <span class="value">nowrap</span>;   <span class="comment">/* default: squeeze onto one line */</span>
-  <span class="property">flex-wrap</span>: <span class="value">wrap</span>;     <span class="comment">/* allow items to wrap to next line */</span>
-}</pre>
-      </div>
-
-      <div class="try-it">
-        <div class="try-it-title">Today's Project: Recreate the PassEPPP Navigation</div>
-        <ol>
-          <li>Create a <span class="inline-code">&lt;nav&gt;</span> with <span class="inline-code">display: flex</span></li>
-          <li>Add a logo/brand on the left</li>
-          <li>Add navigation links in a nested flex container on the right</li>
-          <li>Use <span class="inline-code">justify-content: space-between</span> to push them apart</li>
-          <li>Use <span class="inline-code">align-items: center</span> for vertical alignment</li>
-          <li>Add <span class="inline-code">gap</span> between the nav links</li>
-          <li>Style the links with colors and hover effects</li>
-          <li>Make the nav <span class="inline-code">position: fixed</span> at the top</li>
-        </ol>
-      </div>
-
       <h2>Key Takeaways</h2>
       <ul style="margin-left: 20px; color: var(--text-secondary);">
         <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">display: flex</strong> on the parent creates a flex container</li>
@@ -302,7 +146,6 @@
         <li style="margin: 12px 0;"><strong style="color: var(--text-primary);">Centering is easy:</strong> justify-content: center; align-items: center;</li>
       </ul>
     </div>
-
     <nav class="lesson-nav">
       <a href="/content/week1/week1-quiz.html" class="nav-btn">
         <span>&larr;</span>
@@ -320,15 +163,5 @@
       </a>
     </nav>
   </div>
-
-  <script>
-    function copyCode(btn) {
-      const pre = btn.closest('.code-block').querySelector('pre');
-      navigator.clipboard.writeText(pre.textContent).then(() => {
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = 'Copy', 2000);
-      });
-    }
-  </script>
 </body>
 </html>
